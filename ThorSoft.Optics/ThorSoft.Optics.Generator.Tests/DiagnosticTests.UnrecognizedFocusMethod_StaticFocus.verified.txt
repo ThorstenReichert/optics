@@ -1,0 +1,24 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+    {
+        NoLens.Focus(0);
+        ^^^^^^^^^^^^^^^
+    }
+*/
+ : (9,8)-(9,23),
+      Message: Focus method invocation does not match any known signatures,
+      Severity: Info,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: LENSGEN1002,
+        Title: Skip unrecognized Focus() invocation,
+        MessageFormat: Focus method invocation does not match any known signatures,
+        Category: Interception,
+        DefaultSeverity: Info,
+        IsEnabledByDefault: false
+      }
+    }
+  ]
+}

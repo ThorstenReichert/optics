@@ -1,0 +1,50 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+{ 
+    public int Property { init; } 
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+}
+*/
+ : (3,4)-(3,33),
+      Message: No lens generated for property without getter,
+      Severity: Info,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: LENSGEN0002,
+        Title: Skip property without getter,
+        MessageFormat: No lens generated for property without getter,
+        Category: Code Generation,
+        DefaultSeverity: Info,
+        IsEnabledByDefault: false
+      }
+    },
+    {
+      Location: /*
+[ThorSoft.Optics.GenerateLenses]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+record class TestClass 
+^^^^^^^^^^^^^^^^^^^^^^^
+{ 
+^^
+    public int Property { init; } 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+}
+^
+*/
+ : (0,0)-(4,1),
+      Message: Record is registered for lens generation, but no suitable properties were found,
+      Severity: Info,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: LENSGEN0005,
+        Title: No lenses found to generate,
+        MessageFormat: Record is registered for lens generation, but no suitable properties were found,
+        Category: Code Generation,
+        DefaultSeverity: Info,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

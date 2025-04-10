@@ -1,0 +1,30 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ThorSoft.Optics.GenerateLenses]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+class TestClass 
+^^^^^^^^^^^^^^^^
+{ 
+^^
+    public int Property { get; init; } 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+}
+^
+*/
+ : (0,0)-(4,1),
+      Message: Syntax nodes of kind 'ClassDeclaration' is not supported,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: LENSGEN0004,
+        Title: Unsupported syntax node for lens generation,
+        MessageFormat: Syntax nodes of kind '{0}' is not supported,
+        Category: Code Generation,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

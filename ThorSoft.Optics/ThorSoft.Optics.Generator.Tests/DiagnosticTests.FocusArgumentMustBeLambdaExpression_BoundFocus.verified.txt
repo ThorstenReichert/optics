@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+        Expression<Func<A, int>> selector = c => c.Prop;
+        var lens = instance.Focus(selector);
+                                  ^^^^^^^^
+    }
+*/
+ : (12,34)-(12,42),
+      Message: Focus argument must be lambda expression, but found 'IdentifierName',
+      Severity: Error,
+      Descriptor: {
+        Id: LENSGEN1001,
+        Title: Unsupported Focus() argument,
+        MessageFormat: Focus argument must be lambda expression, but found '{0}',
+        Category: Interception,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
