@@ -25,7 +25,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests.Test
             });
         }
 
-        [GeneratedRegex(@"\[(?:global::)?System\.Runtime\.CompilerServices\.InterceptsLocation\(\d,\s?""([a-zA-Z\d\/=]+)""\)\]")]
+        [GeneratedRegex(@"\[(?:global::)?System\.Runtime\.CompilerServices\.InterceptsLocation\(\d,\s?""([a-zA-Z=\d\/\+]+)""\)\]")]
         private static partial Regex InterceptsLocationRegex();
     }
 }
