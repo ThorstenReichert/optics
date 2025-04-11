@@ -28,7 +28,7 @@ namespace ThorSoft.LensGenerator
                     static (v,x) => x with { Prop = v }
                 )
                 ;
-        [global::System.Runtime.CompilerServices.InterceptsLocation(1, "fyzgGxWiLe9/seFyaw4kBAcBAAA=")] // (12,29)
+        [global::System.Runtime.CompilerServices.InterceptsLocation(1, "<location>")] // (12,29)
         public static global::ThorSoft.Optics.BoundLens<global::Test.Module.TestRecord, global::System.Int32> 
             Focus_1(this global::Test.Module.TestRecord source, global::System.Linq.Expressions.Expression<global::System.Func<global::Test.Module.TestRecord, global::System.Int32>> _)
             {
