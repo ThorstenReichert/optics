@@ -55,7 +55,9 @@ namespace ThorSoft.Optics.Generator
                 return null;
             }
 
+#pragma warning disable RSEXPERIMENTAL002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             if (context.SemanticModel.GetInterceptableLocation(invocationSyntax) is not { } location)
+#pragma warning restore RSEXPERIMENTAL002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             {
                 // Do not even try to intercept anything we cannot get the location of, skip.
                 return null;
