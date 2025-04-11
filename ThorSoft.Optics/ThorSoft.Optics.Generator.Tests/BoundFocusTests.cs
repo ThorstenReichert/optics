@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Runtime.CompilerServices;
+using ThorSoft.Optics.Generator.IntegrationTests.Test;
 using ThorSoft.Optics.Generator.Tests.Generator;
 
 namespace ThorSoft.Optics.Generator.Tests
@@ -29,7 +30,7 @@ namespace ThorSoft.Optics.Generator.Tests
                 }
                 """);
 
-            await Verify(driver);
+            await Verify(driver).ScrubInterceptsLocation();
         }
 
         [Fact]
@@ -56,7 +57,7 @@ namespace ThorSoft.Optics.Generator.Tests
                 }
                 """);
 
-            await Verify(driver);
+            await Verify(driver).ScrubInterceptsLocation();
         }
 
         private static GeneratorDriver BuildDriver(string? sourceText = null, [CallerMemberName] string caller = null!)
