@@ -1,5 +1,9 @@
 <Project>
    <PropertyGroup>
-      <Author>Thorsten Reichert</Author>
+      <Authors>Thorsten Reichert</Authors>
    </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All"/>
+  </ItemGroup>
 </Project>
