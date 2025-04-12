@@ -31,4 +31,4 @@ jobs:
     - name: Test
       run: dotnet test '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.sln' -c Release --no-build
     - name: Pack
-      run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/ThorSoft.Optics.Generator' -c Release
+      run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/ThorSoft.Optics.Generator.csproj' -c Release
