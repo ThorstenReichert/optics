@@ -14,6 +14,10 @@ on:
     types:
       - published
 
+env:
+  CI: true
+  CONFIGURATION: Release
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,13 +31,13 @@ jobs:
     - name: 'Display .Net SDK Version'
       run: dotnet --version
     - name: Build
-      run: dotnet build '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.sln' -c Release 
+      run: dotnet build '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.sln' -c $CONFIGURATION /p:CI=$CI
     - name: Test
-      run: dotnet test '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.sln' -c Release --no-build
+      run: dotnet test '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.sln' -c $CONFIGURATION  --no-build /p:CI=$CI
     - name: Pack
-      run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/ThorSoft.Optics.Generator.csproj' -c Release
+      run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/ThorSoft.Optics.Generator.csproj' -c Release /p:CI=$CI
     - name: Publish Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: package
-        path: '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/bin/Release/*.nupkg'
+        path: '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/bin/$CONFIGURATION/*.nupkg'
