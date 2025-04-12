@@ -1,7 +1,13 @@
 <Project>
-   <PropertyGroup>
-      <Authors>Thorsten Reichert</Authors>
-   </PropertyGroup>
+  <PropertyGroup>
+    <Authors>Thorsten Reichert</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- Disable check for complete documentation file until all is documented. -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All"/>
