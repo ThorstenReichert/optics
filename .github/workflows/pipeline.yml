@@ -32,3 +32,8 @@ jobs:
       run: dotnet test '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.sln' -c Release --no-build
     - name: Pack
       run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/ThorSoft.Optics.Generator.csproj' -c Release
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: package
+        path: '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/bin/Release/*.nupkg'
