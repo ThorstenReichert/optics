@@ -21,15 +21,16 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
     }
 
     [GenerateLenses]
-    public sealed partial record class NestedRecord
-    {
-        public NestedRecord? Property { get; init; }
-    }
+    public sealed partial record class A { public required B PropB { get; init; } }
 
-    record class MyClass
-    {
-        public int Prop { get; set; }
-    }
+    [GenerateLenses]
+    public sealed partial record class B { public required C PropC {get; init;} }
+
+    [GenerateLenses]
+    public sealed partial record class C { public required D PropD {get; init;} }
+
+    [GenerateLenses]
+    public sealed partial record class D { public required string PropString {get; init;} }
 
     public class LensGenerationTests
     {
@@ -70,31 +71,28 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         }
 
         [Fact]
+        public void RecordClass_Set_KeepsOtherPropertyValues()
+        {
+            const int newValue = int.MaxValue; 
+            var instance = new MyRecordClass { IntProperty = 1, RequiredIntProperty = -5 };
+
+            var newInstance = MyRecordClass.Lenses.IntProperty.Set(newValue, instance);
+
+            Assert.Equal(instance with { IntProperty = newValue }, newInstance);
+        }
+
+        [Fact]
         public void DeepNesting()
         {
-            var instance = new NestedRecord
-            {
-                Property = new NestedRecord
-                {
-                    Property = new NestedRecord
-                    {
-                        Property = new NestedRecord
-                        {
-                            Property = null,
-                        }
-                    }
-                }
-            };
+            var instance = new A { PropB = new B { PropC = new C { PropD = new D { PropString = "originalValue" } } } };
 
-            var property = NestedRecord.Lenses.Property;
+            var originalValue = A.Lenses.PropB
+                .Compose(B.Lenses.PropC)
+                .Compose(C.Lenses.PropD)
+                .Compose(D.Lenses.PropString);
 
-            var nextToInnerLens = property.Compose(property).Compose(property);
-            Assert.IsType<NestedRecord>(nextToInnerLens.Get(instance));
-            Assert.Null(nextToInnerLens.Set(null, instance).Property!.Property!.Property);
-
-            var innerLens = property.Compose(property).Compose(property).Compose(property);
-            Assert.Null(innerLens.Get(instance));
-            Assert.NotNull(innerLens.Set(new NestedRecord(), instance).Property!.Property!.Property);
+            Assert.Equal(instance.PropB.PropC.PropD.PropString, originalValue.Get(instance));
+            Assert.Equal("new value", originalValue.Set("new value", instance).PropB.PropC.PropD.PropString);
         }
     }
 }
