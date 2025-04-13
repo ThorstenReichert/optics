@@ -3,6 +3,10 @@
     <Authors>Thorsten Reichert</Authors>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Version>0.0.0</Version>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All"/>
   </ItemGroup>
