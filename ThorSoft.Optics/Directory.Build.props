@@ -1,12 +1,6 @@
 <Project>
   <PropertyGroup>
     <Authors>Thorsten Reichert</Authors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-
-  <!-- Disable check for complete documentation file until all is documented. -->
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
