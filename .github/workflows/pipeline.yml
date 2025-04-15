@@ -17,6 +17,7 @@ on:
 env:
   CI: true
   CONFIGURATION: Release
+  NUGET_DIRECTORY: ${{ github.workspace }}/nuget
   VERSION: ${{ github.event.release.tag_name || '0.0.0' }}
 
 jobs:
@@ -36,9 +37,12 @@ jobs:
     - name: Test
       run: dotnet test '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.sln' -c ${{ env.CONFIGURATION }}  --no-build /p:CI=${{ env.CI }} /p:Version=${{ env.VERSION }}
     - name: Pack
-      run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/ThorSoft.Optics.Generator.csproj' -c Release /p:CI=${{ env.CI }} /p:Version=${{ env.VERSION }}
+      run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/ThorSoft.Optics.Generator.csproj' -c Release --output '${{ env.NUGET_DIRECTORY }}' /p:CI=${{ env.CI }} /p:Version=${{ env.VERSION }}
     - name: Publish Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: package
-        path: '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/bin/${{ env.CONFIGURATION }}/*.nupkg'
+        path: '${{ env.NUGET_DIRECTORY }}/*.nupkg'
+    - name: Publish NuGet
+      if: github.event_name == 'release'
+      run: dotnet nuget push '${{ env.NUGET_DIRECTORY }}/*.nupkg' --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json
