@@ -12,7 +12,7 @@
   <PropertyGroup>
     <PackageTags>Optics;Source-Generator</PackageTags>
     <Description>
-      Optics library to handle non-destructive mutation of immutable data types. Includes source-generatores to efficiently generate relevant optics.
+      Optics library to handle non-destructive mutation of immutable data types. Includes source-generators to efficiently generate relevant optics.
     </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
