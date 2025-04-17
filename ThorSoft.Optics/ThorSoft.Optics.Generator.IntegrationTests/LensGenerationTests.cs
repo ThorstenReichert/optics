@@ -32,6 +32,12 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
     [GenerateLenses]
     public sealed partial record class D { public required string PropString {get; init;} }
 
+    [GenerateLenses]
+    public sealed partial record class PrimaryCtor(int PropertyInt, string PropertyString);
+
+    [GenerateLenses]
+    public readonly partial record struct PrimaryCtorStruct(int PropertyInt, string PropertyString);
+
     public class LensGenerationTests
     {
         [Fact]
@@ -93,6 +99,82 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
 
             Assert.Equal(instance.PropB.PropC.PropD.PropString, originalValue.Get(instance));
             Assert.Equal("new value", originalValue.Set("new value", instance).PropB.PropC.PropD.PropString);
+        }
+
+        [Fact]
+        public void PrimaryConstructor_IntProperty_Get()
+        {
+            var instance = new PrimaryCtor(1, "some value");
+
+            Assert.Equal(instance.PropertyInt, PrimaryCtor.Lenses.PropertyInt.Get(instance));
+        }
+
+        [Fact]
+        public void PrimaryConstructor_IntProperty_Set()
+        {
+            var instance = new PrimaryCtor(1, "some value");
+
+            var newInstance = PrimaryCtor.Lenses.PropertyInt.Set(-3, instance);
+
+            Assert.Equal(-3, newInstance.PropertyInt);
+            Assert.Equal(instance.PropertyString, newInstance.PropertyString);
+        }
+
+        [Fact]
+        public void PrimaryConstructor_StringProperty_Get()
+        {
+            var instance = new PrimaryCtor(1, "some value");
+
+            Assert.Equal(instance.PropertyString, PrimaryCtor.Lenses.PropertyString.Get(instance));
+        }
+
+        [Fact]
+        public void PrimaryConstructor_StringProperty_Set()
+        {
+            var instance = new PrimaryCtor(1, "some value");
+
+            var newInstance = PrimaryCtor.Lenses.PropertyString.Set("new value", instance);
+
+            Assert.Equal("new value", newInstance.PropertyString);
+            Assert.Equal(instance.PropertyInt, newInstance.PropertyInt);
+        }
+
+        [Fact]
+        public void PrimaryConstructorStruct_IntProperty_Get()
+        {
+            var instance = new PrimaryCtorStruct(1, "some value");
+
+            Assert.Equal(instance.PropertyInt, PrimaryCtorStruct.Lenses.PropertyInt.Get(instance));
+        }
+
+        [Fact]
+        public void PrimaryConstructorStruct_IntProperty_Set()
+        {
+            var instance = new PrimaryCtorStruct(1, "some value");
+
+            var newInstance = PrimaryCtorStruct.Lenses.PropertyInt.Set(-3, instance);
+
+            Assert.Equal(-3, newInstance.PropertyInt);
+            Assert.Equal(instance.PropertyString, newInstance.PropertyString);
+        }
+
+        [Fact]
+        public void PrimaryConstructorStruct_StringProperty_Get()
+        {
+            var instance = new PrimaryCtorStruct(1, "some value");
+
+            Assert.Equal(instance.PropertyString, PrimaryCtorStruct.Lenses.PropertyString.Get(instance));
+        }
+
+        [Fact]
+        public void PrimaryConstructorStruct_StringProperty_Set()
+        {
+            var instance = new PrimaryCtorStruct(1, "some value");
+
+            var newInstance = PrimaryCtorStruct.Lenses.PropertyString.Set("new value", instance);
+
+            Assert.Equal("new value", newInstance.PropertyString);
+            Assert.Equal(instance.PropertyInt, newInstance.PropertyInt);
         }
     }
 }
