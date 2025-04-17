@@ -42,6 +42,27 @@ namespace ThorSoft.Optics.Generator
                 ResizeArray<LensToGenerate> properties = new();
                 ResizeArray<Diagnostic> diagnostics = new();
 
+                // Generate a lens for all properties from the primary constructor.
+                var primaryConstructorParameters = recordDeclarationSyntax.ParameterList;
+                foreach (var parameter in primaryConstructorParameters?.Parameters ?? [])
+                {
+                    if (semanticModel.GetDeclaredSymbol(parameter) is not IParameterSymbol parameterSymbol
+                        || parameterSymbol.Type is not ITypeSymbol parameterTypeSymbol)
+                    {
+                        diagnostics.Add(DiagnosticsHelper.CreateUnexpectedDiagnostic(
+                            parameter,
+                            "Failed to extract type information from primary constructor parameter"));
+                        continue;
+                    }
+
+                    properties.Add(new LensToGenerate
+                    {
+                        Name = parameter.Identifier.Text,
+                        Visibility = "public",
+                        Type = parameterTypeSymbol.ToString()
+                    });
+                }
+
                 // Generate a lens for all properties defined on the class.
                 var propertyDeclarations = recordDeclarationSyntax.Members.OfType<PropertyDeclarationSyntax>();
                 foreach (var property in propertyDeclarations)

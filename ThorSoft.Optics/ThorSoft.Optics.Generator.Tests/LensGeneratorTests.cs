@@ -95,6 +95,120 @@ namespace ThorSoft.Optics.Generator.Tests
             await Verify(driver);
         }
 
+        [Fact]
+        public async Task RecordClass_PrimaryConstructorWithSingleParameter()
+        {
+            var driver = BuildDriver("""
+                namespace Test.Module
+                {
+                    using ThorSoft.Optics;
+
+                    [GenerateLenses]
+                    public sealed partial record class TestClass(int Property);
+                }
+                """);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task RecordClass_PrimaryConstructorWithManyParameter()
+        {
+            var driver = BuildDriver("""
+                namespace Test.Module
+                {
+                    using ThorSoft.Optics;
+
+                    [GenerateLenses]
+                    public sealed partial record class TestClass(
+                        int Property1, 
+                        string Property2,
+                        object Propety3);
+                }
+                """);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task RecordClass_PrimaryConstructorAndProperties()
+        {
+            var driver = BuildDriver("""
+                namespace Test.Module
+                {
+                    using ThorSoft.Optics;
+
+                    [GenerateLenses]
+                    public sealed partial record class TestClass(
+                        int Property1, 
+                        string Property2,
+                        object Propety3)
+                    {
+                        public int DeclaredProperty1 { get; init; }
+                    }
+                }
+                """);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task RecordStruct_PrimaryConstructorWithSingleParameter()
+        {
+            var driver = BuildDriver("""
+                namespace Test.Module
+                {
+                    using ThorSoft.Optics;
+
+                    [GenerateLenses]
+                    public readonly partial record struct TestStruct(int Property);
+                }
+                """);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task RecordStruct_PrimaryConstructorWithManyParameter()
+        {
+            var driver = BuildDriver("""
+                namespace Test.Module
+                {
+                    using ThorSoft.Optics;
+
+                    [GenerateLenses]
+                    public readonly partial record struct TestStruct(
+                        int Property1, 
+                        string Property2,
+                        object Propety3);
+                }
+                """);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task RecordStruct_PrimaryConstructorAndProperties()
+        {
+            var driver = BuildDriver("""
+                namespace Test.Module
+                {
+                    using ThorSoft.Optics;
+
+                    [GenerateLenses]
+                    public readonly partial record struct TestStruct(
+                        int Property1, 
+                        string Property2,
+                        object Propety3)
+                    {
+                        public int DeclaredProperty1 { get; init; }
+                    }
+                }
+                """);
+
+            await Verify(driver);
+        }
+
         private static GeneratorDriver BuildDriver(string? sourceText = null, [CallerMemberName] string caller = null!)
         {
             List<SyntaxTree> syntaxTrees = [];
