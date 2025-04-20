@@ -1,3 +1,5 @@
+[![publish](https://github.com/ThorstenReichert/optics/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ThorstenReichert/optics/actions/workflows/pipeline.yml)
+
 # Optics
 
 Optics refers to a class of utilities aimed at simplifying handling of immutable data structures,
