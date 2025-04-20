@@ -193,7 +193,15 @@ namespace ThorSoft.Optics.Generator.Generation
             }
 
             var source = new StringBuilder();
-            var staticPrefix = options.UseStaticLambdas ? "static " : "";
+            var staticPrefix = options.UseStaticLambdas
+                ? "static "
+                : "";
+
+            // Workaround for TypeLoadException on structs with recursive, static type definitions,
+            // see e.g. https://github.com/dotnet/runtime/issues/100077.
+            var propertyExpression = type.IsStructType
+                ? "=>"
+                : "{ get; } =";
 
             source.AppendLine(
                 $$"""
@@ -201,9 +209,6 @@ namespace ThorSoft.Optics.Generator.Generation
 
                 partial record {{type.TypeKind}} {{type.TypeName}}
                 {
-
-                    public static class Lenses
-                    {
                 """);
 
             foreach (var property in type.Properties)
@@ -213,7 +218,7 @@ namespace ThorSoft.Optics.Generator.Generation
                 source.AppendLine(
                 $$"""
 
-                        {{property.Visibility}} static {{lensType}} {{property.Name}} { get; } =
+                        {{property.Visibility}} static {{lensType}} {{property.Name}}Lens {{propertyExpression}}
                             new {{lensType}}(
                                 {{staticPrefix}}(instance) => instance.{{property.Name}},
                                 {{staticPrefix}}(value, instance) => instance with { {{property.Name}} = value });
@@ -222,8 +227,6 @@ namespace ThorSoft.Optics.Generator.Generation
 
             source.AppendLine(
                 $$"""
-
-                    } // Lenses
 
                 } // {{type.TypeName}}
                 """);

@@ -97,9 +97,6 @@ namespace ThorSoft.Optics.Generator
                     }
                 }
 
-                // TODO: generate a lens for all properties defined through primary constructors 
-                // on record types.
-
                 if (properties.Count == 0)
                 {
                     diagnostics.Add(DiagnosticsHelper.CreateNoLensesToGenerate(recordDeclarationSyntax));
@@ -107,9 +104,10 @@ namespace ThorSoft.Optics.Generator
 
                 return new RecordToGenerate
                 {
+                    IsStructType = recordDeclarationSyntax.IsStruct(),
                     TypeName = recordDeclarationSyntax.Identifier.Text,
                     TypeNamespace = recordTypeSymbol.ContainingNamespace.ToString(),
-                    TypeKind = recordDeclarationSyntax.ClassOrStructKeyword.ToString(),
+                    TypeKind = recordDeclarationSyntax.ClassOrStructKeyword.ValueText,
                     Properties = new EquatableMemory<LensToGenerate>(properties.Extract()),
                     Diagnostics = new EquatableMemory<Diagnostic>(diagnostics.Extract())
                 };

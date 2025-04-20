@@ -48,12 +48,6 @@ namespace ThorSoft.Optics.Generator.Syntax
         }
 
         /// <summary>
-        ///     Checks if the given <see cref="PropertyDeclarationSyntax"/> refers to a static property.
-        /// </summary>
-        public static bool IsStaticProperty(this PropertyDeclarationSyntax property) =>
-            property.HasModifierKind(SyntaxKind.StaticKeyword);
-
-        /// <summary>
         ///     Checks if the given <see cref="SyntaxNode"/> refers to a method invocation with method name <paramref name="methodName"/>.
         /// </summary>
         public static bool IsMethodInvocation(this SyntaxNode node, string methodName) =>
@@ -65,6 +59,22 @@ namespace ThorSoft.Optics.Generator.Syntax
                 }
             }
             && candidateMethodName == methodName;
+
+        /// <summary>
+        ///     Checks if the given <see cref="PropertyDeclarationSyntax"/> refers to a static property.
+        /// </summary>
+        public static bool IsStaticProperty(this PropertyDeclarationSyntax property) =>
+            property.HasModifierKind(SyntaxKind.StaticKeyword);
+
+        /// <summary>
+        ///     Checks if the given <see cref="RecordDeclarationSyntax"/> declares a <c>struct</c> record.
+        /// </summary>
+        public static bool IsStruct(this RecordDeclarationSyntax declaration) =>
+            declaration.ClassOrStructKeyword.ValueText switch
+            {
+                "struct" => true,
+                _ => false
+            };
 
         /// <summary>
         ///     Checks if the given <see cref="PropertyDeclarationSyntax"/> has a get-accessor.

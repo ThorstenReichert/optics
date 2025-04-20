@@ -24,13 +24,13 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
     public sealed partial record class A { public required B PropB { get; init; } }
 
     [GenerateLenses]
-    public sealed partial record class B { public required C PropC {get; init;} }
+    public sealed partial record class B { public required C PropC { get; init; } }
 
     [GenerateLenses]
-    public sealed partial record class C { public required D PropD {get; init;} }
+    public sealed partial record class C { public required D PropD { get; init; } }
 
     [GenerateLenses]
-    public sealed partial record class D { public required string PropString {get; init;} }
+    public sealed partial record class D { public required string PropString { get; init; } }
 
     [GenerateLenses]
     public sealed partial record class PrimaryCtor(int PropertyInt, string PropertyString);
@@ -45,7 +45,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new MyRecordClass { RequiredIntProperty = 1 };
 
-            Assert.Equal(instance.RequiredIntProperty, MyRecordClass.Lenses.RequiredIntProperty.Get(instance));
+            Assert.Equal(instance.RequiredIntProperty, MyRecordClass.RequiredIntPropertyLens.Get(instance));
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new MyRecordClass { RequiredIntProperty = 1 };
 
-            var newInstance = MyRecordClass.Lenses.RequiredIntProperty.Set(5, instance);
+            var newInstance = MyRecordClass.RequiredIntPropertyLens.Set(5, instance);
 
             Assert.Equal(5, newInstance.RequiredIntProperty);
         }
@@ -63,7 +63,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new MyRecordClass { IntProperty = 5, RequiredIntProperty = 1 };
 
-            Assert.Equal(instance.IntProperty, MyRecordClass.Lenses.IntProperty.Get(instance));
+            Assert.Equal(instance.IntProperty, MyRecordClass.IntPropertyLens.Get(instance));
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new MyRecordClass { IntProperty = 1, RequiredIntProperty = -1 };
 
-            var newInstance = MyRecordClass.Lenses.IntProperty.Set(5, instance);
+            var newInstance = MyRecordClass.IntPropertyLens.Set(5, instance);
 
             Assert.Equal(5, newInstance.IntProperty);
         }
@@ -79,10 +79,10 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         [Fact]
         public void RecordClass_Set_KeepsOtherPropertyValues()
         {
-            const int newValue = int.MaxValue; 
+            const int newValue = int.MaxValue;
             var instance = new MyRecordClass { IntProperty = 1, RequiredIntProperty = -5 };
 
-            var newInstance = MyRecordClass.Lenses.IntProperty.Set(newValue, instance);
+            var newInstance = MyRecordClass.IntPropertyLens.Set(newValue, instance);
 
             Assert.Equal(instance with { IntProperty = newValue }, newInstance);
         }
@@ -92,10 +92,10 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new A { PropB = new B { PropC = new C { PropD = new D { PropString = "originalValue" } } } };
 
-            var originalValue = A.Lenses.PropB
-                .Compose(B.Lenses.PropC)
-                .Compose(C.Lenses.PropD)
-                .Compose(D.Lenses.PropString);
+            var originalValue = A.PropBLens
+                .Compose(B.PropCLens)
+                .Compose(C.PropDLens)
+                .Compose(D.PropStringLens);
 
             Assert.Equal(instance.PropB.PropC.PropD.PropString, originalValue.Get(instance));
             Assert.Equal("new value", originalValue.Set("new value", instance).PropB.PropC.PropD.PropString);
@@ -106,7 +106,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new PrimaryCtor(1, "some value");
 
-            Assert.Equal(instance.PropertyInt, PrimaryCtor.Lenses.PropertyInt.Get(instance));
+            Assert.Equal(instance.PropertyInt, PrimaryCtor.PropertyIntLens.Get(instance));
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new PrimaryCtor(1, "some value");
 
-            var newInstance = PrimaryCtor.Lenses.PropertyInt.Set(-3, instance);
+            var newInstance = PrimaryCtor.PropertyIntLens.Set(-3, instance);
 
             Assert.Equal(-3, newInstance.PropertyInt);
             Assert.Equal(instance.PropertyString, newInstance.PropertyString);
@@ -125,7 +125,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new PrimaryCtor(1, "some value");
 
-            Assert.Equal(instance.PropertyString, PrimaryCtor.Lenses.PropertyString.Get(instance));
+            Assert.Equal(instance.PropertyString, PrimaryCtor.PropertyStringLens.Get(instance));
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new PrimaryCtor(1, "some value");
 
-            var newInstance = PrimaryCtor.Lenses.PropertyString.Set("new value", instance);
+            var newInstance = PrimaryCtor.PropertyStringLens.Set("new value", instance);
 
             Assert.Equal("new value", newInstance.PropertyString);
             Assert.Equal(instance.PropertyInt, newInstance.PropertyInt);
@@ -144,7 +144,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new PrimaryCtorStruct(1, "some value");
 
-            Assert.Equal(instance.PropertyInt, PrimaryCtorStruct.Lenses.PropertyInt.Get(instance));
+            Assert.Equal(instance.PropertyInt, PrimaryCtorStruct.PropertyIntLens.Get(instance));
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new PrimaryCtorStruct(1, "some value");
 
-            var newInstance = PrimaryCtorStruct.Lenses.PropertyInt.Set(-3, instance);
+            var newInstance = PrimaryCtorStruct.PropertyIntLens.Set(-3, instance);
 
             Assert.Equal(-3, newInstance.PropertyInt);
             Assert.Equal(instance.PropertyString, newInstance.PropertyString);
@@ -163,7 +163,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new PrimaryCtorStruct(1, "some value");
 
-            Assert.Equal(instance.PropertyString, PrimaryCtorStruct.Lenses.PropertyString.Get(instance));
+            Assert.Equal(instance.PropertyString, PrimaryCtorStruct.PropertyStringLens.Get(instance));
         }
 
         [Fact]
@@ -171,7 +171,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             var instance = new PrimaryCtorStruct(1, "some value");
 
-            var newInstance = PrimaryCtorStruct.Lenses.PropertyString.Set("new value", instance);
+            var newInstance = PrimaryCtorStruct.PropertyStringLens.Set("new value", instance);
 
             Assert.Equal("new value", newInstance.PropertyString);
             Assert.Equal(instance.PropertyInt, newInstance.PropertyInt);
