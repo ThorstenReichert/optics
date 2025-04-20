@@ -81,18 +81,15 @@ public partial record A(int Prop1, string Prop2);
 // Generated
 partial record A
 {
-	public static class Lenses
-	{
-		public static Lens<A, int> Prop1 { get; } = ...;
-		public static Lens<A, string> Prop2 { get; } = ...;
-	}
+	public static Lens<A, int> Prop1Lens { get; } = ...;
+	public static Lens<A, string> Prop2Lens { get; } = ...;
 }
 ```
 With this generator, the aforementioned example could be rewritten via
 ```csharp
-var lensAB = A.Lenses.PropB;
-var lensBC = B.Lenses.PropC;
-var lensCS = C.Lenses.Prop;
+var lensAB = A.PropBLens;
+var lensBC = B.PropCLens;
+var lensCS = C.PropLens;
 
 A instance = ...;
 A updatedA = lensAB.Compose(lensBC).Compose(lensCS).Set("my new value", instance);
