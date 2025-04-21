@@ -38,7 +38,7 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
     [GenerateLenses]
     public readonly partial record struct PrimaryCtorStruct(int PropertyInt, string PropertyString);
 
-    public class LensGenerationTests
+    public partial class LensGenerationTests
     {
         [Fact]
         public void RecordClass_RequiredIntProperty_Getter()
