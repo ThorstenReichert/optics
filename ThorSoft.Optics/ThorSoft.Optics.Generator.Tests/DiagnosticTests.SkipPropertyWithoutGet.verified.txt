@@ -24,8 +24,8 @@
       Location: /*
 [ThorSoft.Optics.GenerateLenses]
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-record class TestClass 
-^^^^^^^^^^^^^^^^^^^^^^^
+partial record class TestClass 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 { 
 ^^
     public int Property { init; } 

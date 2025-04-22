@@ -36,89 +36,89 @@ namespace ThorSoft.Optics.Generator
         private static CodeGenerationRequest GetClassToGenerate(SemanticModel semanticModel, SyntaxNode targetNode)
         {
             // Generate new partial class definition for all classes with GenerateLenses attribute.
-            if (targetNode is RecordDeclarationSyntax recordDeclarationSyntax
-                && semanticModel.GetDeclaredSymbol(recordDeclarationSyntax) is INamedTypeSymbol recordTypeSymbol)
+            if (targetNode is not RecordDeclarationSyntax recordDeclarationSyntax
+                || semanticModel.GetDeclaredSymbol(recordDeclarationSyntax) is not INamedTypeSymbol recordTypeSymbol)
             {
-                ResizeArray<LensToGenerate> properties = new();
-                ResizeArray<Diagnostic> diagnostics = new();
+                return NoGeneratedLenses(DiagnosticsHelper.CreateUnsupportedGenerateLensesTarget(targetNode));
+            }
 
-                // Generate a lens for all properties from the primary constructor.
-                var primaryConstructorParameters = recordDeclarationSyntax.ParameterList;
-                foreach (var parameter in primaryConstructorParameters?.Parameters ?? [])
+            if (!recordDeclarationSyntax.IsPartialDeclaration())
+            {
+                return NoGeneratedLenses(DiagnosticsHelper.CreateMissingPartialKeyword(recordDeclarationSyntax));
+            }
+
+            ResizeArray<LensToGenerate> properties = new();
+            ResizeArray<Diagnostic> diagnostics = new();
+
+            // Generate a lens for all properties from the primary constructor.
+            var primaryConstructorParameters = recordDeclarationSyntax.ParameterList;
+            foreach (var parameter in primaryConstructorParameters?.Parameters ?? [])
+            {
+                if (semanticModel.GetDeclaredSymbol(parameter) is not IParameterSymbol parameterSymbol
+                    || parameterSymbol.Type is not ITypeSymbol parameterTypeSymbol)
                 {
-                    if (semanticModel.GetDeclaredSymbol(parameter) is not IParameterSymbol parameterSymbol
-                        || parameterSymbol.Type is not ITypeSymbol parameterTypeSymbol)
-                    {
-                        diagnostics.Add(DiagnosticsHelper.CreateUnexpectedDiagnostic(
-                            parameter,
-                            "Failed to extract type information from primary constructor parameter"));
-                        continue;
-                    }
+                    diagnostics.Add(DiagnosticsHelper.CreateUnexpectedDiagnostic(
+                        parameter,
+                        "Failed to extract type information from primary constructor parameter"));
+                    continue;
+                }
 
+                properties.Add(new LensToGenerate
+                {
+                    Name = parameter.Identifier.Text,
+                    Visibility = "public",
+                    Type = parameterTypeSymbol.ToString()
+                });
+            }
+
+            // Generate a lens for all properties defined on the class.
+            var propertyDeclarations = recordDeclarationSyntax.Members.OfType<PropertyDeclarationSyntax>();
+            foreach (var property in propertyDeclarations)
+            {
+                if (property.IsStaticProperty())
+                {
+                    diagnostics.Add(DiagnosticsHelper.CreateSkipStaticProperty(property));
+                    continue;
+                }
+
+                if (!property.HasGetter())
+                {
+                    diagnostics.Add(DiagnosticsHelper.CreateSkipPropertyWithoutGetter(property));
+                    continue;
+                }
+
+                if (!property.HasSetter() && !property.HasInit())
+                {
+                    diagnostics.Add(DiagnosticsHelper.CreateSkipPropertyWithoutInitOrSetter(property));
+                    continue;
+                }
+
+                if (semanticModel.GetDeclaredSymbol(property) is IPropertySymbol propertySymbol
+                    && propertySymbol.Type is ITypeSymbol propertyTypeSymbol)
+                {
                     properties.Add(new LensToGenerate
                     {
-                        Name = parameter.Identifier.Text,
-                        Visibility = "public",
-                        Type = parameterTypeSymbol.ToString()
+                        Name = property.Identifier.Text,
+                        Visibility = string.Join(" ", property.GetAccessModifiers()).Trim(),
+                        Type = propertyTypeSymbol.ToString()
                     });
                 }
-
-                // Generate a lens for all properties defined on the class.
-                var propertyDeclarations = recordDeclarationSyntax.Members.OfType<PropertyDeclarationSyntax>();
-                foreach (var property in propertyDeclarations)
-                {
-                    if (property.IsStaticProperty())
-                    {
-                        diagnostics.Add(DiagnosticsHelper.CreateSkipStaticProperty(property));
-                        continue;
-                    }
-
-                    if (!property.HasGetter())
-                    {
-                        diagnostics.Add(DiagnosticsHelper.CreateSkipPropertyWithoutGetter(property));
-                        continue;
-                    }
-
-                    if (!property.HasSetter() && !property.HasInit())
-                    {
-                        diagnostics.Add(DiagnosticsHelper.CreateSkipPropertyWithoutInitOrSetter(property));
-                        continue;
-                    }
-
-                    if (semanticModel.GetDeclaredSymbol(property) is IPropertySymbol propertySymbol
-                        && propertySymbol.Type is ITypeSymbol propertyTypeSymbol)
-                    {
-                        properties.Add(new LensToGenerate
-                        {
-                            Name = property.Identifier.Text,
-                            Visibility = string.Join(" ", property.GetAccessModifiers()).Trim(),
-                            Type = propertyTypeSymbol.ToString()
-                        });
-                    }
-                }
-
-                if (properties.Count == 0)
-                {
-                    diagnostics.Add(DiagnosticsHelper.CreateNoLensesToGenerate(recordDeclarationSyntax));
-                }
-
-                return new RecordToGenerate
-                {
-                    IsStructType = recordDeclarationSyntax.IsStruct(),
-                    TypeName = recordDeclarationSyntax.Identifier.Text,
-                    TypeNamespace = recordTypeSymbol.ContainingNamespace.ToString(),
-                    TypeKind = recordDeclarationSyntax.ClassOrStructKeyword.ValueText,
-                    Properties = new EquatableMemory<LensToGenerate>(properties.Extract()),
-                    Diagnostics = new EquatableMemory<Diagnostic>(diagnostics.Extract())
-                };
             }
-            else
+
+            if (properties.Count == 0)
             {
-                return new CodeGenerationRequest
-                {
-                    Diagnostics = new EquatableMemory<Diagnostic>(DiagnosticsHelper.CreateUnsupportedGenerateLensesTarget(targetNode))
-                };
+                diagnostics.Add(DiagnosticsHelper.CreateNoLensesToGenerate(recordDeclarationSyntax));
             }
+
+            return new RecordToGenerate
+            {
+                IsStructType = recordDeclarationSyntax.IsStruct(),
+                TypeName = recordDeclarationSyntax.Identifier.Text,
+                TypeNamespace = recordTypeSymbol.ContainingNamespace.ToString(),
+                TypeKind = recordDeclarationSyntax.ClassOrStructKeyword.ValueText,
+                Properties = new EquatableMemory<LensToGenerate>(properties.Extract()),
+                Diagnostics = new EquatableMemory<Diagnostic>(diagnostics.Extract())
+            };
         }
 
         private static void Execute(CodeGenerationRequest request, CodeGenerationOptions options, SourceProductionContext spc)
@@ -140,6 +140,14 @@ namespace ThorSoft.Optics.Generator
                     $"LensGenerator.{recordToGenerate.TypeName}.g.cs",
                     SourceText.From(sourceText, GlobalOptions.SourceTextEncoding));
             }
+        }
+
+        private static CodeGenerationRequest NoGeneratedLenses(params Diagnostic[] diagnostics)
+        {
+            return new CodeGenerationRequest
+            {
+                Diagnostics = new EquatableMemory<Diagnostic>(diagnostics)
+            };
         }
     }
 }
