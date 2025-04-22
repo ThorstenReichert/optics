@@ -12,7 +12,7 @@ namespace ThorSoft.Optics.Generator.Tests
         {
             var driver = BuildDriver("""
                 [ThorSoft.Optics.GenerateLenses]
-                record class TestClass 
+                partial record class TestClass 
                 { 
                     public static int Property { get; init; } 
                 }
@@ -27,7 +27,7 @@ namespace ThorSoft.Optics.Generator.Tests
         {
             var driver = BuildDriver("""
                 [ThorSoft.Optics.GenerateLenses]
-                record class TestClass 
+                partial record class TestClass 
                 { 
                     public int Property { init; } 
                 }
@@ -42,7 +42,7 @@ namespace ThorSoft.Optics.Generator.Tests
         {
             var driver = BuildDriver("""
                 [ThorSoft.Optics.GenerateLenses]
-                record class TestClass 
+                partial record class TestClass 
                 { 
                     public int Property { get; } 
                 }
@@ -58,6 +58,21 @@ namespace ThorSoft.Optics.Generator.Tests
             var driver = BuildDriver("""
                 [ThorSoft.Optics.GenerateLenses]
                 class TestClass 
+                { 
+                    public int Property { get; init; } 
+                }
+                """,
+                []);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task MissingPartialKeyword()
+        {
+            var driver = BuildDriver("""
+                [ThorSoft.Optics.GenerateLenses]
+                record class TestClass 
                 { 
                     public int Property { get; init; } 
                 }

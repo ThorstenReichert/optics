@@ -85,6 +85,20 @@ namespace ThorSoft.Optics.Generator.Diagnostics
                 record.GetLocation());
         }
 
+        private static readonly DiagnosticDescriptor MissingPartialKeyword = new(
+            id: "LENSGEN0006",
+            title: "Cannot generate lenses for non-partial type declaration",
+            messageFormat: "Record is registered for lens generation, but is missing the partial keyword",
+            category: Category.CodeGeneration,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true);
+        public static Diagnostic CreateMissingPartialKeyword(RecordDeclarationSyntax record)
+        {
+            return Diagnostic.Create(
+                MissingPartialKeyword,
+                record.GetLocation());
+        }
+
         private static readonly DiagnosticDescriptor FocusArgumentMustBeLambdaExpression = new(
 
             id: "LENSGEN1001",

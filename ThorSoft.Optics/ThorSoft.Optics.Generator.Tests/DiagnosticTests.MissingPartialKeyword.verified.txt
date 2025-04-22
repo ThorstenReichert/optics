@@ -1,0 +1,30 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ThorSoft.Optics.GenerateLenses]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+record class TestClass 
+^^^^^^^^^^^^^^^^^^^^^^^
+{ 
+^^
+    public int Property { get; init; } 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+}
+^
+*/
+ : (0,0)-(4,1),
+      Message: Record is registered for lens generation, but is missing the partial keyword,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: LENSGEN0006,
+        Title: Cannot generate lenses for non-partial type declaration,
+        MessageFormat: Record is registered for lens generation, but is missing the partial keyword,
+        Category: Code Generation,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

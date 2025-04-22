@@ -61,6 +61,12 @@ namespace ThorSoft.Optics.Generator.Syntax
             && candidateMethodName == methodName;
 
         /// <summary>
+        ///     Checks if the given <see cref="TypeDeclarationSyntax"/> is a partial declaration.
+        /// </summary>
+        public static bool IsPartialDeclaration(this TypeDeclarationSyntax declaration) =>
+            declaration.HasModifierKind(SyntaxKind.PartialKeyword);
+
+        /// <summary>
         ///     Checks if the given <see cref="PropertyDeclarationSyntax"/> refers to a static property.
         /// </summary>
         public static bool IsStaticProperty(this PropertyDeclarationSyntax property) =>
@@ -97,7 +103,7 @@ namespace ThorSoft.Optics.Generator.Syntax
         private static bool HasAccessorKind(this PropertyDeclarationSyntax property, SyntaxKind kind) =>
             property.AccessorList?.Accessors.Any(accessor => accessor.IsKind(kind)) == true;
 
-        private static bool HasModifierKind(this PropertyDeclarationSyntax property, SyntaxKind kind) =>
-            property.Modifiers.Any(modifier => modifier.IsKind(kind));
+        private static bool HasModifierKind(this MemberDeclarationSyntax declaration, SyntaxKind kind) =>
+            declaration.Modifiers.Any(modifier => modifier.IsKind(kind));
     }
 }
