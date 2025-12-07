@@ -3,14 +3,14 @@
 namespace ThorSoft.Optics
 {
     /// <summary>
-    ///     A general lens allowing non-destructive mutations of immutable data structures.
+    ///     An optic that focuses a specific property of target type <typeparamref name="T"/> on the source type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">The base type of the lens.</typeparam>
-    /// <typeparam name="U">The property type of the lens.</typeparam>
+    /// <typeparam name="T">The source type of the lens.</typeparam>
+    /// <typeparam name="U">The target type of the lens.</typeparam>
     public readonly struct Lens<T, U>
     {
         /// <summary>
-        ///     Creates a new <see cref="Lens{T, U}"/> instances with specified getter and setter.
+        ///     Creates a new lens instance with specified getter and setter.
         /// </summary>
         /// <param name="get">The getter of the lens.</param>
         /// <param name="set">The setter of the lens.</param>
@@ -32,9 +32,9 @@ namespace ThorSoft.Optics
     }
 
     /// <summary>
-    ///     Factory methods for <see cref="Lens{T, U}"/> instances of base type <typeparamref name="T"/>.
+    ///     Factory methods for <see cref="Lens{T, U}"/> types.
     /// </summary>
-    /// <typeparam name="T">The base type of the constructed lenses.</typeparam>
+    /// <typeparam name="T">The source type of the constructed lenses.</typeparam>
     public static class Lens<T>
     {
         /// <summary>

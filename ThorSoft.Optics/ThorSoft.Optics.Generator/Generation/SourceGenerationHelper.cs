@@ -10,7 +10,7 @@ namespace ThorSoft.Optics.Generator.Generation
 {
     internal static class SourceGenerationHelper
     {
-        internal static readonly string OpticsNamespace = typeof(LensExtensions).Namespace;
+        internal static readonly string OpticsNamespace = typeof(OpticsExtensions).Namespace;
         internal static readonly string LensTypeName = typeof(Lens<,>).GetFullNameWithoutGenericArity();
         internal static readonly string BoundLensTypeName = typeof(BoundLens<,>).GetFullNameWithoutGenericArity();
         internal static readonly string ExpressionTypeName = typeof(Expression<>).GetFullNameWithoutGenericArity();

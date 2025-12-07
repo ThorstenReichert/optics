@@ -37,7 +37,7 @@ namespace ThorSoft.Optics.Generator
 
         private static bool IsFocusCallCandidate(SyntaxNode node)
         {
-            return node.IsMethodInvocation(nameof(LensExtensions.Focus))
+            return node.IsMethodInvocation(nameof(OpticsExtensions.Focus))
                 || node.IsMethodInvocation(nameof(Lens<object>.Focus));
         }
 
@@ -143,7 +143,7 @@ namespace ThorSoft.Optics.Generator
         /// </summary>
         private static bool IsBoundFocusInvocation(IInvocationOperation targetOperation)
         {
-            return targetOperation.TargetMethod.IsMethod(nameof(LensExtensions.Focus), typeof(LensExtensions))
+            return targetOperation.TargetMethod.IsMethod(nameof(OpticsExtensions.Focus), typeof(OpticsExtensions))
                 && targetOperation.Instance is null
                 && targetOperation.Arguments is { Length: 2 };
         }
