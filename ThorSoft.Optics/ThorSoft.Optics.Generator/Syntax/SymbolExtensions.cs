@@ -43,7 +43,7 @@ namespace ThorSoft.Optics.Generator.Syntax
             var parts = @namespace.Split('.');
             var current = symbol.ContainingNamespace;
 
-            foreach (var part in parts.Reverse())
+            foreach (var part in parts.AsEnumerable().Reverse())
             {
                 if (current.Name != part)
                 {
