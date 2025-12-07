@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThorSoft.Optics", "ThorSoft.Optics\ThorSoft.Optics.csproj", "{9CF90A45-A143-40E9-BC2F-993C328094AF}"
 EndProject
@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		..\global.json = ..\global.json
 		..\LICENSE = ..\LICENSE
 		..\LICENSE-EquatableArray = ..\LICENSE-EquatableArray
 		..\.github\workflows\pipeline.yml = ..\.github\workflows\pipeline.yml
