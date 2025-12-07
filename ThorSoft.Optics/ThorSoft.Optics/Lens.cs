@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace ThorSoft.Optics
 {
@@ -46,6 +47,7 @@ namespace ThorSoft.Optics
         /// <returns>
         ///     A <see cref="Lens{T, U}"/> focusing on the nested property selected by <paramref name="propertySelector"/>.
         /// </returns>
+        [ExcludeFromCodeCoverage]
         public static Lens<T, U> Focus<U>(Expression<Func<T, U>> propertySelector)
         {
             throw new NotImplementedException("Method is only a marker to be intercepted via the accompanying source-generator");
