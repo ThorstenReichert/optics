@@ -8,19 +8,6 @@ namespace ThorSoft.Optics
     public static class BoundIsoExtensions
     {
         /// <summary>
-        ///     Creates a bound identity iso for the given source value.
-        /// </summary>
-        /// <typeparam name="T">The source and target type of the bound iso.</typeparam>
-        /// <param name="source">The source instance of the bound iso.</param>
-        /// <returns>
-        ///     An iso that maps the source value to itself.
-        /// </returns>
-        public static BoundIso<T, T> Identity<T>(this T source) =>
-            new(
-                Iso.Identity<T>(),
-                source);
-
-        /// <summary>
         ///     Maps the bound instance.
         /// </summary>
         /// <typeparam name="T">The source type of the iso.</typeparam>
