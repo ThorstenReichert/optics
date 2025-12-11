@@ -6,12 +6,6 @@ namespace ThorSoft.Optics.Generator.Diagnostics
 {
     internal static class DiagnosticsHelper
     {
-        private static class Category
-        {
-            internal const string CodeGeneration = "Code Generation";
-            internal const string Interception = "Interception";
-            internal const string Unexpected = "Unexpected";
-        }
 
         private static readonly DiagnosticDescriptor SkipStaticProperty = new(
             id: "LENSGEN0001",

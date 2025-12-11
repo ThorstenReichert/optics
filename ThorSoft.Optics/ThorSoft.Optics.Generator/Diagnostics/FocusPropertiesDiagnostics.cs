@@ -1,0 +1,102 @@
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace ThorSoft.Optics.Generator.Diagnostics
+{
+    public static class FocusPropertiesDiagnostics
+    {
+        #region 1000 - 1999 FocusProperties Diagnostics
+
+        private static readonly DiagnosticDescriptor MustBeRecordTypeTemplate = new(
+            id: "OPTICS1001",
+            title: "FocusProperties can only be used with record types",
+            messageFormat: "Encountered unexpected issue: {0}",
+            category: Category.CodeGeneration,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+        public static Diagnostic MustBeRecordType(SyntaxNode node)
+        {
+            return Diagnostic.Create(
+                MustBeRecordTypeTemplate,
+                node.GetLocation());
+        }
+
+
+        private static readonly DiagnosticDescriptor NoLensesToGenerateTemplate = new(
+            id: "OPTICS1002",
+            title: "No lenses found to generate",
+            messageFormat: "Record is registered for lens generation, but no suitable properties were found",
+            category: Category.CodeGeneration,
+            defaultSeverity: DiagnosticSeverity.Info,
+            isEnabledByDefault: true);
+        public static Diagnostic NoLensesToGenerate(RecordDeclarationSyntax record)
+        {
+            return Diagnostic.Create(
+                NoLensesToGenerateTemplate,
+                record.GetLocation());
+        }
+
+        private static readonly DiagnosticDescriptor SkipStaticPropertyTemplate = new(
+            id: "OPTICS1003",
+            title: "Skip static property",
+            messageFormat: "No lens generated for static property",
+            category: Category.CodeGeneration,
+            defaultSeverity: DiagnosticSeverity.Info,
+            isEnabledByDefault: false);
+        public static Diagnostic SkipStaticProperty(PropertyDeclarationSyntax property)
+        {
+            return Diagnostic.Create(
+                SkipStaticPropertyTemplate,
+                property.GetLocation());
+        }
+
+        private static readonly DiagnosticDescriptor SkipPropertyWithoutGetterTemplate = new(
+            id: "OPTICS1004",
+            title: "Skip property without getter",
+            messageFormat: "No lens generated for property without getter",
+            category: Category.CodeGeneration,
+            defaultSeverity: DiagnosticSeverity.Info,
+            isEnabledByDefault: false);
+        public static Diagnostic SkipPropertyWithoutGetter(PropertyDeclarationSyntax property)
+        {
+            return Diagnostic.Create(
+                SkipPropertyWithoutGetterTemplate,
+                property.GetLocation());
+        }
+
+        private static readonly DiagnosticDescriptor SkipPropertyWithoutInitOrSetterTemplate = new(
+            id: "OPTICS1005",
+            title: "Skip property without init or setter",
+            messageFormat: "No lens generated for property with neither init not setter",
+            category: Category.CodeGeneration,
+            defaultSeverity: DiagnosticSeverity.Info,
+            isEnabledByDefault: false);
+        public static Diagnostic SkipPropertyWithoutInitOrSetter(PropertyDeclarationSyntax property)
+        {
+            return Diagnostic.Create(
+                SkipPropertyWithoutInitOrSetterTemplate,
+                property.GetLocation());
+        }
+
+        #endregion
+
+        #region 9999 - 9999 Unexpected Diagnostics
+
+        private static readonly DiagnosticDescriptor UnexpectedTemplate = new(
+            id: "OPTICS9999",
+            title: "Unexpected Issue",
+            messageFormat: "Encountered unexpected issue: {0}",
+            category: Category.Unexpected,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+        public static Diagnostic Unexpected(SyntaxNode node, string message)
+        {
+            return Diagnostic.Create(
+                UnexpectedTemplate,
+                node.GetLocation(),
+                message);
+        }
+
+        #endregion
+    }
+}
