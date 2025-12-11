@@ -1,7 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ThorSoft.Optics.Generator.Diagnostics;
+using ThorSoft.Optics.Generator.Syntax;
+using ThorSoft.Optics.Generator.Util;
 
 namespace ThorSoft.Optics.Generator.FocusProperties
 {
