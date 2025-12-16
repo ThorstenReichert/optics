@@ -16,7 +16,7 @@ namespace ThorSoft.Optics.Generator
                     FocusPropertiesAttribute.SourceText);
             });
 
-            IncrementalValuesProvider<FocusPropertiesOutput> focusProperties = context.SyntaxProvider
+            IncrementalValuesProvider<FocusPropertiesRequest> focusProperties = context.SyntaxProvider
                 .ForAttributeWithMetadataName(
                     "ThorSoft.Optics.FocusPropertiesAttribute",
                     predicate: static (node, _) => true,

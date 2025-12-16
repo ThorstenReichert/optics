@@ -6,7 +6,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
 {
     internal static class FocusPropertiesDiagnosticExtensions
     {
-        public static FocusPropertiesOutput AsOutput(this Diagnostic diagnostic) =>
+        public static FocusPropertiesRequest AsOutput(this Diagnostic diagnostic) =>
             new()
             {
                 Diagnostics = new EquatableMemory<Diagnostic>([diagnostic])
