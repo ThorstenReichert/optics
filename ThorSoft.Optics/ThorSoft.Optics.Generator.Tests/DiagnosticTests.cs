@@ -14,10 +14,25 @@ namespace ThorSoft.Optics.Generator.Tests
                 [ThorSoft.Optics.FocusProperties]
                 partial class TestClass 
                 { 
-                    public static int Property { get; init; } 
+                    public int Property { get; init; } 
                 }
                 """,
                 ["OPTICS1001"]);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task NoLensesToGenerate()
+        {
+            var driver = BuildDriver("""
+                [ThorSoft.Optics.FocusProperties]
+                partial record class TestClass 
+                { 
+                    public static int Property { get; init; } 
+                }
+                """,
+                ["OPTICS1002"]);
 
             await Verify(driver);
         }

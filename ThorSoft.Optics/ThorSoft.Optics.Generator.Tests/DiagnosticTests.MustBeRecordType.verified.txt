@@ -8,18 +8,18 @@ partial class TestClass
 ^^^^^^^^^^^^^^^^^^^^^^^^
 { 
 ^^
-    public static int Property { get; init; } 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    public int Property { get; init; } 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }
 ^
 */
  : (0,0)-(4,1),
-      Message: Encountered unexpected issue: {0},
+      Message: FocusProperties can only be used with record types,
       Severity: Error,
       Descriptor: {
         Id: OPTICS1001,
-        Title: FocusProperties can only be used with record types,
-        MessageFormat: Encountered unexpected issue: {0},
+        Title: Must be record type,
+        MessageFormat: FocusProperties can only be used with record types,
         Category: Code Generation,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
