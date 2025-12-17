@@ -37,7 +37,7 @@ jobs:
     - name: Test
       run: dotnet test --solution '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.sln' -c ${{ env.CONFIGURATION }}  --no-build /p:CI=${{ env.CI }} /p:Version=${{ env.VERSION }}
     - name: Pack
-      run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics.Generator/ThorSoft.Optics.Generator.csproj' -c Release --output '${{ env.NUGET_DIRECTORY }}' /p:CI=${{ env.CI }} /p:Version=${{ env.VERSION }}
+      run: dotnet pack '${{ github.workspace }}/ThorSoft.Optics/ThorSoft.Optics/ThorSoft.Optics.csproj' -c Release --output '${{ env.NUGET_DIRECTORY }}' /p:CI=${{ env.CI }} /p:Version=${{ env.VERSION }}
     - name: Publish Artifacts
       uses: actions/upload-artifact@v4
       with:

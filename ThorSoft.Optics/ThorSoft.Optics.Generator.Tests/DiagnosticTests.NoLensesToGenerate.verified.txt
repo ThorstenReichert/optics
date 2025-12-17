@@ -2,26 +2,6 @@
   Diagnostics: [
     {
       Location: /*
-{ 
-    public static int Property { get; init; } 
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-}
-*/
- : (3,4)-(3,45),
-      Message: No lens generated for static property,
-      Severity: Info,
-      WarningLevel: 1,
-      Descriptor: {
-        Id: OPTICS1003,
-        Title: Skip static property,
-        MessageFormat: No lens generated for static property,
-        Category: Code Generation,
-        DefaultSeverity: Info,
-        IsEnabledByDefault: false
-      }
-    },
-    {
-      Location: /*
 [ThorSoft.Optics.FocusProperties]
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 partial record class TestClass 

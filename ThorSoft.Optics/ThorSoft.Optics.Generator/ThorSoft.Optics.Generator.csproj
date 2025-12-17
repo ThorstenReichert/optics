@@ -10,15 +10,6 @@
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageTags>Optics;Source-Generator</PackageTags>
-    <Description>
-      Optics library to handle non-destructive mutation of immutable data types. Includes source-generators to efficiently generate relevant optics.
-    </Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
-
   <ItemGroup>
     <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
@@ -28,20 +19,6 @@
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ThorSoft.Optics\ThorSoft.Optics.csproj" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="$(MsBuildThisFileDirectory)/../../README.md" Pack="true" PackagePath="\" Visible="false" />
-    <None Include="$(MsBuildThisFileDirectory)/../../LICENSE" Pack="true" PackagePath="\" Visible="false" />
-    <None Include="$(MsBuildThisFileDirectory)/../../LICENSE-EquatableArray" Pack="true" PackagePath="\" Visible="false" />
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(OutputPath)\ThorSoft.Optics.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(OutputPath)\ThorSoft.Optics.dll" Pack="true" PackagePath="lib/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)\ThorSoft.Optics.xml" Pack="true" PackagePath="lib/netstandard2.0" Visible="false" />
   </ItemGroup>
 
 </Project>

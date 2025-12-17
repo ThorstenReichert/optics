@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-
-namespace ThorSoft.Optics
+﻿namespace ThorSoft.Optics
 {
     /// <summary>
     ///     An optic that focuses a specific property of target type <typeparamref name="T"/> on the source type <typeparamref name="T"/>.
@@ -30,27 +27,5 @@ namespace ThorSoft.Optics
         ///     Creates a copy with the value of the focused property updated.
         /// </summary>
         public Func<U, T, T> Set { get; }
-    }
-
-    /// <summary>
-    ///     Factory methods for <see cref="Lens{T, U}"/> types.
-    /// </summary>
-    /// <typeparam name="T">The source type of the constructed lenses.</typeparam>
-    public static class Lens<T>
-    {
-        /// <summary>
-        ///     Generate a <see cref="Lens{T, U}"/> that focuses in on a nested property of <typeparamref name="T"/> 
-        ///     through the path <paramref name="propertySelector"/>.
-        /// </summary>
-        /// <typeparam name="U">The type of the property selected through <paramref name="propertySelector"/>.</typeparam>
-        /// <param name="propertySelector">The expression selecting the nested property to focus on.</param>
-        /// <returns>
-        ///     A <see cref="Lens{T, U}"/> focusing on the nested property selected by <paramref name="propertySelector"/>.
-        /// </returns>
-        [ExcludeFromCodeCoverage]
-        public static Lens<T, U> Focus<U>(Expression<Func<T, U>> propertySelector)
-        {
-            throw new NotImplementedException("Method is only a marker to be intercepted via the accompanying source-generator");
-        }
     }
 }

@@ -72,39 +72,33 @@ the more interesting part are the accompanying source-generators. While composin
 creating the component lenses in the first part requires a fair bit of boilerplate code, which can be 
 mitigated by using source generation.
 
-The simplest form of source-generation is provided via the `[GenerateLenses]` attribute, applicable
-to record types themselves. The source-generator will then generate a nested class inside the attributed type
-containing lenses for all directly defined properties on the type, such as
+The simplest form of source-generation is provided via the `[FocusProperties]` attribute, applicable
+to record types themselves. 
 ```csharp
+[FocusProperties]
 public partial record A(int Prop1, string Prop2);
-
-// Generated
-partial record A
-{
-	public static Lens<A, int> Prop1Lens { get; } = ...;
-	public static Lens<A, string> Prop2Lens { get; } = ...;
-}
-```
-With this generator, the aforementioned example could be rewritten via
-```csharp
-var lensAB = A.PropBLens;
-var lensBC = B.PropCLens;
-var lensCS = C.PropLens;
-
-A instance = ...;
-A updatedA = lensAB.Compose(lensBC).Compose(lensCS).Set("my new value", instance);
 ```
 
-Another option for generating deeply nested lenses directly is via the `LensExtensions.Focus()` and `Lens<>.Focus()` methods.
-Both accept a lambda-expression that is intended to determine the path through the nested properties, such as
+The source generator will then generate code, to enable using the types properties
+from within a special `Focus` method to generate lenses:
 ```csharp
-var lens = Lens<A>.Focus(a => a.PropB.PropC.Prop);
+Lens<A, int> lensProp1 = Optics.Focus<A>(a => a.Prop1);
 ```
-The source generator will intercept the call to `Focus()` and return the appropriate `Lens<A, string>`.
-For more direct updates of single instances, the `LensExtensions.Focus()` method can similarly be invoced on any record type instance
+
+The `Focus` method also allows to directly generate nested properties, as long as all participating types
+are annotated with `[FocusProperties]`, such as
 ```csharp
-A instance = ...;
-A updatedA = instance.Focus(a => a.PropB.PropC.Prop).Set("my new value");
+[FocusProperties]
+record A(B PropB);
+
+[FocusProperties]
+record B(C PropC);
+
+[FocusProperties]
+record C(string Prop);
 ```
-Notice that the `Set` method did not reqire to specify the instance argument. Instead, the instance `Focus()` was invoked
-on is propagated through `Focus()` and inserted into the `Set` call of the underlying lens directly.
+
+The lens focusing from `PropB` of `A` all the way down to `Prop` of `C` can then be generated via
+```csharp
+Lens<A, string> lens = Optics.Focus<A>(a => a.PropB.PropC.Prop);
+```

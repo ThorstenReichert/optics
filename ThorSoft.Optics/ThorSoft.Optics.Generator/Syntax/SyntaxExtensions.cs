@@ -1,86 +1,52 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Frozen;
 
 namespace ThorSoft.Optics.Generator.Syntax
 {
     internal static class SyntaxExtensions
     {
-        private static readonly FrozenSet<SyntaxKind> AccessModifierKinds =
-            new HashSet<SyntaxKind>{
-                SyntaxKind.PublicKeyword,
-                SyntaxKind.ProtectedKeyword,
-                SyntaxKind.InternalKeyword,
-                SyntaxKind.PrivateKeyword
-            }
-            .ToFrozenSet();
-
         /// <summary>
-        ///     Returns the list of all access modifies on the given <see cref="PropertyDeclarationSyntax"/> 
-        ///     (i.e. <c>private</c>, <c>protected</c>, <c>internal</c>, or <c>public</c>)
+        ///     Returns the visibility of the given property.
         /// </summary>
-        public static IEnumerable<string> GetAccessModifiers(this PropertyDeclarationSyntax property)
+        public static Visibility GetVisibility(this PropertyDeclarationSyntax property)
         {
-            foreach (var modifier in property.Modifiers)
+            var modifiers = property.Modifiers;
+
+            if (TryGetVisibility(modifiers, out var visibility))
             {
-                if (AccessModifierKinds.Contains(modifier.Kind()))
-                {
-                    yield return modifier.ToString();
-                }
+                return visibility;
+            }
+            else
+            {
+                // Default visibility for properties is internal
+                return Visibility.Private;
             }
         }
 
         /// <summary>
-        ///     Returns the generic parameter type of the given <see cref="GenericNameSyntax"/> with index <paramref name="index"/>
-        ///     in its type parameter list.
+        ///     Returns the visibility of the given record.
         /// </summary>
-        public static INamedTypeSymbol? GetGenericTypeArgument(this GenericNameSyntax name, SemanticModel semanticModel, int index = 0)
+        public static Visibility GetVisibility(this RecordDeclarationSyntax record)
         {
-            var typeArgumentList = name.TypeArgumentList.Arguments;
+            var modifiers = record.Modifiers;
 
-            if (index < typeArgumentList.Count && semanticModel.GetSymbolInfo(typeArgumentList[index]).Symbol is INamedTypeSymbol typeSymbol)
+            if (TryGetVisibility(modifiers, out var visibility))
             {
-                return typeSymbol;
+                return visibility;
             }
-
-            return null;
+            else
+            {
+                // Default visibility for records is internal
+                return Visibility.Internal;
+            }
         }
-
-        /// <summary>
-        ///     Checks if the given <see cref="SyntaxNode"/> refers to a method invocation with method name <paramref name="methodName"/>.
-        /// </summary>
-        public static bool IsMethodInvocation(this SyntaxNode node, string methodName) =>
-            node is InvocationExpressionSyntax
-            {
-                Expression: MemberAccessExpressionSyntax
-                {
-                    Name.Identifier.ValueText: string candidateMethodName
-                }
-            }
-            && candidateMethodName == methodName;
-
-        /// <summary>
-        ///     Checks if the given <see cref="TypeDeclarationSyntax"/> is a partial declaration.
-        /// </summary>
-        public static bool IsPartialDeclaration(this TypeDeclarationSyntax declaration) =>
-            declaration.HasModifierKind(SyntaxKind.PartialKeyword);
 
         /// <summary>
         ///     Checks if the given <see cref="PropertyDeclarationSyntax"/> refers to a static property.
         /// </summary>
         public static bool IsStaticProperty(this PropertyDeclarationSyntax property) =>
             property.HasModifierKind(SyntaxKind.StaticKeyword);
-
-        /// <summary>
-        ///     Checks if the given <see cref="RecordDeclarationSyntax"/> declares a <c>struct</c> record.
-        /// </summary>
-        public static bool IsStruct(this RecordDeclarationSyntax declaration) =>
-            declaration.ClassOrStructKeyword.ValueText switch
-            {
-                "struct" => true,
-                _ => false
-            };
 
         /// <summary>
         ///     Checks if the given <see cref="PropertyDeclarationSyntax"/> has a get-accessor.
@@ -105,5 +71,40 @@ namespace ThorSoft.Optics.Generator.Syntax
 
         private static bool HasModifierKind(this MemberDeclarationSyntax declaration, SyntaxKind kind) =>
             declaration.Modifiers.Any(modifier => modifier.IsKind(kind));
+
+        private static bool TryGetVisibility(SyntaxTokenList modifiers, out Visibility visibility)
+        {
+            if (modifiers.Any(static x => x.IsKind(SyntaxKind.PrivateKeyword))
+                && modifiers.Any(static x => x.IsKind(SyntaxKind.ProtectedKeyword)))
+            {
+                visibility = Visibility.PrivateProtected;
+                return true;
+            }
+            else if (modifiers.Any(static x => x.IsKind(SyntaxKind.PublicKeyword)))
+            {
+                visibility = Visibility.Public;
+                return true;
+            }
+            else if (modifiers.Any(static x => x.IsKind(SyntaxKind.PrivateKeyword)))
+            {
+                visibility = Visibility.Private;
+                return true;
+            }
+            else if (modifiers.Any(static x => x.IsKind(SyntaxKind.ProtectedKeyword)))
+            {
+                visibility = Visibility.Protected;
+                return true;
+            }
+            else if (modifiers.Any(static x => x.IsKind(SyntaxKind.InternalKeyword)))
+            {
+                visibility = Visibility.Internal;
+                return true;
+            }
+            else
+            {
+                visibility = default;
+                return false;
+            }
+        }
     }
 }

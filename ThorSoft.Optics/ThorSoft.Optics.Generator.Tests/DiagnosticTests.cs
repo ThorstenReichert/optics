@@ -8,172 +8,76 @@ namespace ThorSoft.Optics.Generator.Tests
     public sealed class DiagnosticTests
     {
         [Fact]
-        public async Task SkipStaticProperty()
+        public async Task MustBeRecordType()
         {
             var driver = BuildDriver("""
-                [ThorSoft.Optics.GenerateLenses]
+                [ThorSoft.Optics.FocusProperties]
+                partial class TestClass 
+                { 
+                    public int Property { get; init; } 
+                }
+                """,
+                ["OPTICS1001"]);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task NoLensesToGenerate()
+        {
+            var driver = BuildDriver("""
+                [ThorSoft.Optics.FocusProperties]
                 partial record class TestClass 
                 { 
                     public static int Property { get; init; } 
                 }
                 """,
-                ["LENSGEN0001"]);
+                ["OPTICS1002"]);
 
             await Verify(driver);
         }
 
         [Fact]
-        public async Task SkipPropertyWithoutGet()
+        public async Task SkipStaticProperty()
         {
             var driver = BuildDriver("""
-                [ThorSoft.Optics.GenerateLenses]
+                [ThorSoft.Optics.FocusProperties]
+                partial record class TestClass 
+                { 
+                    public static int Property { get; init; } 
+                }
+                """,
+                ["OPTICS1003"]);
+
+            await Verify(driver);
+        }
+
+        [Fact]
+        public async Task SkipPropertyWithoutGetter()
+        {
+            var driver = BuildDriver("""
+                [ThorSoft.Optics.FocusProperties]
                 partial record class TestClass 
                 { 
                     public int Property { init; } 
                 }
                 """,
-                ["LENSGEN0002"]);
+                ["OPTICS1004"]);
 
             await Verify(driver);
         }
 
         [Fact]
-        public async Task SkipPropertyWithoutInitOrSet()
+        public async Task SkipPropertyWithoutInitOrSetter()
         {
             var driver = BuildDriver("""
-                [ThorSoft.Optics.GenerateLenses]
+                [ThorSoft.Optics.FocusProperties]
                 partial record class TestClass 
                 { 
                     public int Property { get; } 
                 }
                 """,
-                ["LENSGEN0003"]);
-
-            await Verify(driver);
-        }
-
-        [Fact]
-        public async Task SkipUnsupportedTarget()
-        {
-            var driver = BuildDriver("""
-                [ThorSoft.Optics.GenerateLenses]
-                class TestClass 
-                { 
-                    public int Property { get; init; } 
-                }
-                """,
-                []);
-
-            await Verify(driver);
-        }
-
-        [Fact]
-        public async Task MissingPartialKeyword()
-        {
-            var driver = BuildDriver("""
-                [ThorSoft.Optics.GenerateLenses]
-                record class TestClass 
-                { 
-                    public int Property { get; init; } 
-                }
-                """,
-                []);
-
-            await Verify(driver);
-        }
-
-        [Fact]
-        public async Task FocusArgumentMustBeLambdaExpression_BoundFocus()
-        {
-            var driver = BuildDriver("""
-                using ThorSoft.Optics;
-                using System;
-                using System.Linq.Expressions;
-
-                internal sealed record class A(int Prop);
-
-                public static class TestClass
-                {
-                    public static void TestMethod()
-                    {
-                        var instance = new A(5);
-                        Expression<Func<A, int>> selector = c => c.Prop;
-                        var lens = instance.Focus(selector);
-                    }
-                }
-                """,
-                []);
-
-            await Verify(driver);
-        }
-
-        [Fact]
-        public async Task FocusArgumentMustBeLambdaExpression_StaticFocus()
-        {
-            var driver = BuildDriver("""
-                using ThorSoft.Optics;
-                using System;
-                using System.Linq.Expressions;
-
-                internal sealed record class A(int Prop);
-
-                public static class TestClass
-                {
-                    public static void TestMethod()
-                    {
-                        Expression<Func<A, int>> selector = c => c.Prop;
-                        var lens = Lens<A>.Focus(selector);
-                    }
-                }
-                """,
-                []);
-
-            await Verify(driver);
-        }
-
-        [Fact]
-        public async Task UnrecognizedFocusMethod_BoundFocus()
-        {
-            var driver = BuildDriver("""
-                internal sealed record class A(int Prop);
-
-                public static class Extensions
-                {
-                    public static void Focus(this object obj, int value) { }
-                }
-
-                public static class TestClass
-                {
-                    public static void TestMethod()
-                    {
-                        var instance = new A(0);
-                        instance.Focus(0);
-                    }
-                }
-                """,
-                ["LENSGEN1002"]);
-
-            await Verify(driver);
-        }
-
-        [Fact]
-        public async Task UnrecognizedFocusMethod_StaticFocus()
-        {
-            var driver = BuildDriver("""
-                public static class NoLens
-                {
-                    public static void Focus(int value) { }
-                }
-
-                public static class TestClass
-                {
-                    public static void TestMethod()
-                    {
-                        NoLens.Focus(0);
-                    }
-                }
-                """,
-                ["LENSGEN1002"]);
+                ["OPTICS1005"]);
 
             await Verify(driver);
         }
@@ -191,7 +95,7 @@ namespace ThorSoft.Optics.Generator.Tests
                 CompilationHelper.References,
                 options);
 
-            var driver = CSharpGeneratorDriver.Create(new LensGenerator(), new FocusGenerator());
+            var driver = CSharpGeneratorDriver.Create(new OpticsGenerator());
 
             return driver.RunGenerators(compilation);
         }

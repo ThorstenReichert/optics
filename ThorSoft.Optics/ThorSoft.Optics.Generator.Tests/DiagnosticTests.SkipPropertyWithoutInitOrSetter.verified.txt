@@ -3,18 +3,18 @@
     {
       Location: /*
 { 
-    public static int Property { get; init; } 
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    public int Property { get; } 
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }
 */
- : (3,4)-(3,45),
-      Message: No lens generated for static property,
+ : (3,4)-(3,32),
+      Message: No lens generated for property with neither init not setter,
       Severity: Info,
       WarningLevel: 1,
       Descriptor: {
-        Id: OPTICS1003,
-        Title: Skip static property,
-        MessageFormat: No lens generated for static property,
+        Id: OPTICS1005,
+        Title: Skip property without init or setter,
+        MessageFormat: No lens generated for property with neither init not setter,
         Category: Code Generation,
         DefaultSeverity: Info,
         IsEnabledByDefault: false
@@ -28,8 +28,8 @@ partial record class TestClass
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 { 
 ^^
-    public static int Property { get; init; } 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    public int Property { get; } 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }
 ^
 */

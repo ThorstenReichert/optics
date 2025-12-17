@@ -5,12 +5,9 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-LENSGEN0001 | Code Generation | Disabled | DiagnosticsHelper
-LENSGEN0002 | Code Generation | Disabled | DiagnosticsHelper
-LENSGEN0003 | Code Generation | Disabled | DiagnosticsHelper
-LENSGEN0004 | Code Generation | Warning | DiagnosticsHelper
-LENSGEN0005 | Code Generation | Info | DiagnosticsHelper
-LENSGEN0006 | Code Generation | Warning | DiagnosticsHelper
-LENSGEN1001 | Interception | Error | DiagnosticsHelper
-LENSGEN1002 | Interception | Disabled | DiagnosticsHelper
-LENSGEN9999 | Unexpected | Error | DiagnosticsHelper
+OPTICS1001 | Code Generation | Error | DiagnosticsFactory
+OPTICS1002 | Code Generation | Info | DiagnosticsFactory
+OPTICS1003 | Code Generation | Disabled | DiagnosticsFactory
+OPTICS1004 | Code Generation | Disabled | DiagnosticsFactory
+OPTICS1005 | Code Generation | Disabled | DiagnosticsFactory
+OPTICS9999 | Unexpected | Error | DiagnosticsFactory
