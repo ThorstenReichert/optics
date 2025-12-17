@@ -8,7 +8,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
 {
     internal static class FocusPropertiesExtraction
     {
-        public static FocusPropertiesRequest Invoke(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+        public static FocusPropertiesRequest Invoke(GeneratorAttributeSyntaxContext context, CancellationToken _)
         {
             if (context.TargetNode is not RecordDeclarationSyntax recordDeclarationSyntax
                 || context.TargetSymbol is not INamedTypeSymbol recordTypeSymbol)
