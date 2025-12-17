@@ -13,7 +13,7 @@ namespace ThorSoft.Optics.Generator.Tests
             var driver = BuildDriver("""
                 using ThorSoft.Optics;
 
-                namespace ThorSoft.Optics;
+                namespace Test.Namespace;
 
                 [FocusProperties]
                 public sealed partial record class TestClass
