@@ -37,6 +37,21 @@ namespace ThorSoft.Optics.Generator.Tests
             await Verify(driver);
         }
 
+        [Fact]
+        public async Task SkipStaticProperty()
+        {
+            var driver = BuildDriver("""
+                [ThorSoft.Optics.FocusProperties]
+                partial record class TestClass 
+                { 
+                    public static int Property { get; init; } 
+                }
+                """,
+                ["OPTICS1003"]);
+
+            await Verify(driver);
+        }
+
         private static GeneratorDriver BuildDriver(string sourceText, IEnumerable<string> enabledDiagnostics, [CallerMemberName] string caller = null!)
         {
             var options = new CSharpCompilationOptions(
