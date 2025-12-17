@@ -8,4 +8,24 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageTags>Optics;Source-Generator</PackageTags>
+    <Description>
+      Optics library to handle non-destructive mutation of immutable data types. Includes source-generators to efficiently generate relevant optics.
+    </Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\ThorSoft.Optics.Generator\ThorSoft.Optics.Generator.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(MsBuildThisFileDirectory)/../../README.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MsBuildThisFileDirectory)/../../LICENSE" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MsBuildThisFileDirectory)/../../LICENSE-EquatableArray" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MsBuildThisFileDirectory)\..\ThorSoft.Optics.Generator\bin\$(Configuration)\netstandard2.0\ThorSoft.Optics.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
 </Project>
