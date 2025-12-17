@@ -86,7 +86,7 @@
         }
 
         /// <inheritdoc cref="object.Equals(object)"/>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is Maybe<T> other)
             {
@@ -101,7 +101,7 @@
         /// <inheritdoc cref="object.GetHashCode"/>
         public override int GetHashCode()
         {
-            return _hasValue.GetHashCode() * 17 + _value?.GetHashCode() ?? 0;
+            return HashCode.Combine(_hasValue, _value?.GetHashCode());
         }
 
         /// <summary>
