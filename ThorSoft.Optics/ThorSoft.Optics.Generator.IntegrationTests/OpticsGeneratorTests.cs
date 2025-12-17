@@ -60,5 +60,19 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         {
             public int Property { get; set; }
         }
+
+        [Fact]
+        public void Focus_RequiredProperty_SatisfiesLensSpec()
+        {
+            Lens<TestRecord_RequiredProperty, int> lens = Optics<TestRecord_RequiredProperty>.Focus(r => r.Property);
+
+            LensSpec.IsSatisfied(lens);
+        }
+
+        [FocusProperties]
+        public record class TestRecord_RequiredProperty : IEqualityOperators<TestRecord_RequiredProperty, TestRecord_RequiredProperty, bool>
+        {
+            public required int Property { get; set; }
+        }
     }
 }
