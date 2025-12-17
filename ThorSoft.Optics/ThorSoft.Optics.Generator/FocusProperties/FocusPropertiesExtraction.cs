@@ -18,6 +18,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
 
             var typeName = recordTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var typeKind = recordDeclarationSyntax.ClassOrStructKeyword.ValueText;
+            var typeVisibility = recordDeclarationSyntax.GetVisibility();
 
             ResizeArray<Diagnostic> diagnostics = new();
             ResizeArray<Lens> lenses = new();
@@ -38,7 +39,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 lenses.Add(new Lens
                 {
                     Name = parameter.Identifier.Text,
-                    Visibility = "public",
+                    Visibility = typeVisibility.Merge(Visibility.Public).ToDeclarationString(),
                     Type = parameterTypeSymbol.ToString()
                 });
             }
@@ -71,7 +72,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                     lenses.Add(new Lens
                     {
                         Name = property.Identifier.Text,
-                        Visibility = string.Join(" ", property.GetAccessModifiers()).Trim(),
+                        Visibility = property.GetVisibility().Merge(typeVisibility).ToDeclarationString(),
                         Type = propertyTypeSymbol.ToString()
                     });
                 }

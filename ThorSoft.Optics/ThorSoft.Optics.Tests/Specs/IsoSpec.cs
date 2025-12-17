@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace ThorSoft.Optics.Tests.Specs
 {
-    internal static class IsoSpec
+    public static class IsoSpec
     {
         public static Func<T, bool> DirectRoundtrip<T, U>(Iso<T, U> iso, IEqualityComparer<T> comparer)
         {

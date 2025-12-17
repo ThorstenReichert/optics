@@ -3,7 +3,7 @@ using FsCheck.Fluent;
 
 namespace ThorSoft.Optics.Tests.Specs
 {
-    internal static class OptionalSpec
+    public static class OptionalSpec
     {
         public static Func<T, U, bool> SetGet<T, U>(Optional<T, U> optional, IEqualityComparer<U> comparer)
         {

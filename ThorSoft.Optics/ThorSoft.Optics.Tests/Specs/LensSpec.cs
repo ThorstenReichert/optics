@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace ThorSoft.Optics.Tests.Specs
 {
-    internal static class LensSpec
+    public static class LensSpec
     {
         public static Func<T, bool> GetSet<T, U>(Lens<T, U> lens, IEqualityComparer<T> comparer)
         {

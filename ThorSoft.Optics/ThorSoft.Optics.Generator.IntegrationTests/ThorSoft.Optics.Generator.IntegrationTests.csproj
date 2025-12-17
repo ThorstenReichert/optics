@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ThorSoft.Optics.Generator\ThorSoft.Optics.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\ThorSoft.Optics.Tests\ThorSoft.Optics.Tests.csproj" />
     <ProjectReference Include="..\ThorSoft.Optics\ThorSoft.Optics.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
   </ItemGroup>
 
