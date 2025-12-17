@@ -2,7 +2,6 @@
 {
     public sealed class OpticsGeneratorTests
     {
-        [FocusProperties]
-        private sealed class TestClass { }
+        
     }
 }

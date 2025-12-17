@@ -13,7 +13,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
             if (context.TargetNode is not RecordDeclarationSyntax recordDeclarationSyntax
                 || context.TargetSymbol is not INamedTypeSymbol recordTypeSymbol)
             {
-                return FocusPropertiesDiagnostics.MustBeRecordType(context.TargetNode).AsOutput();
+                return DiagnosticsFactory.MustBeRecordType(context.TargetNode).AsOutput();
             }
 
             var typeName = recordTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -29,7 +29,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 if (context.SemanticModel.GetDeclaredSymbol(parameter) is not IParameterSymbol parameterSymbol
                     || parameterSymbol.Type is not ITypeSymbol parameterTypeSymbol)
                 {
-                    diagnostics.Add(FocusPropertiesDiagnostics.Unexpected(
+                    diagnostics.Add(DiagnosticsFactory.Unexpected(
                         parameter,
                         "Failed to extract type information from primary constructor parameter"));
                     continue;
@@ -49,19 +49,19 @@ namespace ThorSoft.Optics.Generator.FocusProperties
             {
                 if (property.IsStaticProperty())
                 {
-                    diagnostics.Add(FocusPropertiesDiagnostics.SkipStaticProperty(property));
+                    diagnostics.Add(DiagnosticsFactory.SkipStaticProperty(property));
                     continue;
                 }
 
                 if (!property.HasGetter())
                 {
-                    diagnostics.Add(FocusPropertiesDiagnostics.SkipPropertyWithoutGetter(property));
+                    diagnostics.Add(DiagnosticsFactory.SkipPropertyWithoutGetter(property));
                     continue;
                 }
 
                 if (!property.HasSetter() && !property.HasInit())
                 {
-                    diagnostics.Add(FocusPropertiesDiagnostics.SkipPropertyWithoutInitOrSetter(property));
+                    diagnostics.Add(DiagnosticsFactory.SkipPropertyWithoutInitOrSetter(property));
                     continue;
                 }
 
@@ -79,7 +79,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
 
             if (lenses.Count == 0)
             {
-                diagnostics.Add(FocusPropertiesDiagnostics.NoLensesToGenerate(recordDeclarationSyntax));
+                diagnostics.Add(DiagnosticsFactory.NoLensesToGenerate(recordDeclarationSyntax));
             }
 
             return new()

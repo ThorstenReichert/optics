@@ -30,57 +30,11 @@ namespace ThorSoft.Optics.Generator.Syntax
                 }
             }
         }
-
-        /// <summary>
-        ///     Returns the generic parameter type of the given <see cref="GenericNameSyntax"/> with index <paramref name="index"/>
-        ///     in its type parameter list.
-        /// </summary>
-        public static INamedTypeSymbol? GetGenericTypeArgument(this GenericNameSyntax name, SemanticModel semanticModel, int index = 0)
-        {
-            var typeArgumentList = name.TypeArgumentList.Arguments;
-
-            if (index < typeArgumentList.Count && semanticModel.GetSymbolInfo(typeArgumentList[index]).Symbol is INamedTypeSymbol typeSymbol)
-            {
-                return typeSymbol;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        ///     Checks if the given <see cref="SyntaxNode"/> refers to a method invocation with method name <paramref name="methodName"/>.
-        /// </summary>
-        public static bool IsMethodInvocation(this SyntaxNode node, string methodName) =>
-            node is InvocationExpressionSyntax
-            {
-                Expression: MemberAccessExpressionSyntax
-                {
-                    Name.Identifier.ValueText: string candidateMethodName
-                }
-            }
-            && candidateMethodName == methodName;
-
-        /// <summary>
-        ///     Checks if the given <see cref="TypeDeclarationSyntax"/> is a partial declaration.
-        /// </summary>
-        public static bool IsPartialDeclaration(this TypeDeclarationSyntax declaration) =>
-            declaration.HasModifierKind(SyntaxKind.PartialKeyword);
-
         /// <summary>
         ///     Checks if the given <see cref="PropertyDeclarationSyntax"/> refers to a static property.
         /// </summary>
         public static bool IsStaticProperty(this PropertyDeclarationSyntax property) =>
             property.HasModifierKind(SyntaxKind.StaticKeyword);
-
-        /// <summary>
-        ///     Checks if the given <see cref="RecordDeclarationSyntax"/> declares a <c>struct</c> record.
-        /// </summary>
-        public static bool IsStruct(this RecordDeclarationSyntax declaration) =>
-            declaration.ClassOrStructKeyword.ValueText switch
-            {
-                "struct" => true,
-                _ => false
-            };
 
         /// <summary>
         ///     Checks if the given <see cref="PropertyDeclarationSyntax"/> has a get-accessor.

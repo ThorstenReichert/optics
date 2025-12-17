@@ -191,7 +191,7 @@ namespace ThorSoft.Optics.Generator.Tests
                 CompilationHelper.References,
                 options);
 
-            var driver = CSharpGeneratorDriver.Create(new LensGenerator(), new FocusGenerator());
+            var driver = CSharpGeneratorDriver.Create(new OpticsGenerator());
 
             return driver.RunGenerators(compilation);
         }

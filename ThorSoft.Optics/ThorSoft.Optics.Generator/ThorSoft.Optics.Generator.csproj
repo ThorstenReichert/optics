@@ -31,10 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ThorSoft.Optics\ThorSoft.Optics.csproj" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="$(MsBuildThisFileDirectory)/../../README.md" Pack="true" PackagePath="\" Visible="false" />
     <None Include="$(MsBuildThisFileDirectory)/../../LICENSE" Pack="true" PackagePath="\" Visible="false" />
     <None Include="$(MsBuildThisFileDirectory)/../../LICENSE-EquatableArray" Pack="true" PackagePath="\" Visible="false" />

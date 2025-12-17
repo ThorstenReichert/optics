@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ThorSoft.Optics.Generator.Diagnostics
 {
-    public static class FocusPropertiesDiagnostics
+    public static class DiagnosticsFactory
     {
         #region 1000 - 1999 FocusProperties Diagnostics
 
