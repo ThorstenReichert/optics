@@ -1,0 +1,29 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ThorSoft.Optics.FocusProperties]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+partial class TestClass 
+^^^^^^^^^^^^^^^^^^^^^^^^
+{ 
+^^
+    public static int Property { get; init; } 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+}
+^
+*/
+ : (0,0)-(4,1),
+      Message: Encountered unexpected issue: {0},
+      Severity: Error,
+      Descriptor: {
+        Id: OPTICS1001,
+        Title: FocusProperties can only be used with record types,
+        MessageFormat: Encountered unexpected issue: {0},
+        Category: Code Generation,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

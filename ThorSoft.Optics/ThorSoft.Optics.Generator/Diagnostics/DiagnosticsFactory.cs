@@ -9,8 +9,8 @@ namespace ThorSoft.Optics.Generator.Diagnostics
 
         private static readonly DiagnosticDescriptor MustBeRecordTypeTemplate = new(
             id: "OPTICS1001",
-            title: "FocusProperties can only be used with record types",
-            messageFormat: "Encountered unexpected issue: {0}",
+            title: "Must be record type",
+            messageFormat: "FocusProperties can only be used with record types",
             category: Category.CodeGeneration,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true);
