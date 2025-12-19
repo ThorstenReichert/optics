@@ -16,10 +16,10 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 return DiagnosticsFactory.MustBeRecordType(context.TargetNode).AsOutput();
             }
 
-            var typeVisibility = recordDeclarationSyntax.GetVisibility();
-            if (typeVisibility is Visibility.Private or Visibility.PrivateProtected or Visibility.Protected)
+            var typeAccessibility = recordTypeSymbol.DeclaredAccessibility;
+            if (typeAccessibility is Accessibility.Private or Accessibility.ProtectedAndInternal or Accessibility.Protected)
             {
-                return DiagnosticsFactory.SkipInaccessibleNestedRecord(recordDeclarationSyntax, typeVisibility).AsOutput();
+                return DiagnosticsFactory.SkipInaccessibleNestedRecord(recordDeclarationSyntax, typeAccessibility.ToKeywords()).AsOutput();
             }
 
             var typeName = recordTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -44,47 +44,52 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 lenses.Add(new Lens
                 {
                     Name = parameter.Identifier.Text,
-                    Visibility = typeVisibility.Merge(Visibility.Public).ToDeclarationString(),
+                    Visibility = Accessibility.Public.ToEffectiveAccessibility(typeAccessibility).ToKeywords(),
                     Type = parameterTypeSymbol.ToString()
                 });
             }
 
-            // Generate a lens for all properties defined on the class.
-            var propertyDeclarations = recordDeclarationSyntax.Members.OfType<PropertyDeclarationSyntax>();
-            foreach (var property in propertyDeclarations)
+            var propertySymbols = recordTypeSymbol.GetMembers().OfType<IPropertySymbol>();
+            foreach (var propertySymbol in propertySymbols)
             {
-                if (property.IsStaticProperty())
+                if (propertySymbol.IsImplicitlyDeclared)
                 {
-                    diagnostics.Add(DiagnosticsFactory.SkipStaticProperty(property));
+                    // Silently skip compiler-generated properties such as EqualityContract.
                     continue;
                 }
 
-                if (!property.HasGetter())
+                if (propertySymbol.IsStatic)
                 {
-                    diagnostics.Add(DiagnosticsFactory.SkipPropertyWithoutGetter(property));
+                    diagnostics.AddSkipStaticProperty(propertySymbol);
                     continue;
                 }
 
-                if (!property.HasSetter() && !property.HasInit())
+                if (propertySymbol.GetMethod is null)
                 {
-                    diagnostics.Add(DiagnosticsFactory.SkipPropertyWithoutInitOrSetter(property));
+                    diagnostics.AddSkipPropertyWithoutGetter(propertySymbol);
                     continue;
                 }
 
-                var propertyVisibility = property.GetVisibility();
-                if (propertyVisibility is Visibility.Private or Visibility.PrivateProtected or Visibility.Protected)
+                if (propertySymbol.SetMethod is null)
                 {
-                    diagnostics.Add(DiagnosticsFactory.SkipInaccessibleProperty(property, propertyVisibility));
+                    // Init-properties also have SetMethod (but with IsInitOnly = true).
+                    diagnostics.AddSkipPropertyWithoutInitOrSetter(propertySymbol);
                     continue;
                 }
 
-                if (context.SemanticModel.GetDeclaredSymbol(property) is IPropertySymbol propertySymbol
-                    && propertySymbol.Type is ITypeSymbol propertyTypeSymbol)
+                var propertyAccessibility = propertySymbol.DeclaredAccessibility;
+                if (propertyAccessibility is Accessibility.Private or Accessibility.ProtectedAndInternal or Accessibility.Protected)
+                {
+                    diagnostics.AddSkipInaccessibleProperty(propertySymbol, propertyAccessibility.ToKeywords());
+                    continue;
+                }
+
+                if (propertySymbol.Type is ITypeSymbol propertyTypeSymbol)
                 {
                     lenses.Add(new Lens
                     {
-                        Name = property.Identifier.Text,
-                        Visibility = property.GetVisibility().Merge(typeVisibility).ToDeclarationString(),
+                        Name = propertySymbol.Name,
+                        Visibility = propertyAccessibility.ToEffectiveAccessibility(typeAccessibility).ToKeywords(),
                         Type = propertyTypeSymbol.ToString()
                     });
                 }

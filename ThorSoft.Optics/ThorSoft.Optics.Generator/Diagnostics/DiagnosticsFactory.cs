@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using ThorSoft.Optics.Generator.Syntax;
+using ThorSoft.Optics.Generator.Util;
 
 namespace ThorSoft.Optics.Generator.Diagnostics
 {
@@ -44,11 +44,14 @@ namespace ThorSoft.Optics.Generator.Diagnostics
             category: Category.CodeGeneration,
             defaultSeverity: DiagnosticSeverity.Info,
             isEnabledByDefault: false);
-        public static Diagnostic SkipStaticProperty(PropertyDeclarationSyntax property)
+        public static void AddSkipStaticProperty(this ResizeArray<Diagnostic> diagnostics, IPropertySymbol property)
         {
-            return Diagnostic.Create(
-                SkipStaticPropertyTemplate,
-                property.GetLocation());
+            foreach (var syntaxReference in property.DeclaringSyntaxReferences)
+            {
+                diagnostics.Add(Diagnostic.Create(
+                    SkipStaticPropertyTemplate,
+                    syntaxReference.GetSyntax().GetLocation()));
+            }
         }
 
         private static readonly DiagnosticDescriptor SkipPropertyWithoutGetterTemplate = new(
@@ -58,11 +61,14 @@ namespace ThorSoft.Optics.Generator.Diagnostics
             category: Category.CodeGeneration,
             defaultSeverity: DiagnosticSeverity.Info,
             isEnabledByDefault: false);
-        public static Diagnostic SkipPropertyWithoutGetter(PropertyDeclarationSyntax property)
+        public static void AddSkipPropertyWithoutGetter(this ResizeArray<Diagnostic> diagnostics, IPropertySymbol property)
         {
-            return Diagnostic.Create(
-                SkipPropertyWithoutGetterTemplate,
-                property.GetLocation());
+            foreach (var syntaxReference in property.DeclaringSyntaxReferences)
+            {
+                diagnostics.Add(Diagnostic.Create(
+                    SkipPropertyWithoutGetterTemplate,
+                    syntaxReference.GetSyntax().GetLocation()));
+            }
         }
 
         private static readonly DiagnosticDescriptor SkipPropertyWithoutInitOrSetterTemplate = new(
@@ -72,11 +78,14 @@ namespace ThorSoft.Optics.Generator.Diagnostics
             category: Category.CodeGeneration,
             defaultSeverity: DiagnosticSeverity.Info,
             isEnabledByDefault: false);
-        public static Diagnostic SkipPropertyWithoutInitOrSetter(PropertyDeclarationSyntax property)
+        public static void AddSkipPropertyWithoutInitOrSetter(this ResizeArray<Diagnostic> diagnostics, IPropertySymbol property)
         {
-            return Diagnostic.Create(
-                SkipPropertyWithoutInitOrSetterTemplate,
-                property.GetLocation());
+            foreach (var syntaxReference in property.DeclaringSyntaxReferences)
+            {
+                diagnostics.Add(Diagnostic.Create(
+                    SkipPropertyWithoutInitOrSetterTemplate,
+                    syntaxReference.GetSyntax().GetLocation()));
+            }
         }
 
         private static readonly DiagnosticDescriptor SkipInaccessiblePropertyTemplate = new(
@@ -86,12 +95,15 @@ namespace ThorSoft.Optics.Generator.Diagnostics
             category: Category.CodeGeneration,
             defaultSeverity: DiagnosticSeverity.Info,
             isEnabledByDefault: false);
-        public static Diagnostic SkipInaccessibleProperty(PropertyDeclarationSyntax property, Visibility visibility)
+        public static void AddSkipInaccessibleProperty(this ResizeArray<Diagnostic> diagnostics, IPropertySymbol property, string visibility)
         {
-            return Diagnostic.Create(
-                SkipInaccessiblePropertyTemplate,
-                property.GetLocation(),
-                visibility.ToDeclarationString());
+            foreach (var syntaxReference in property.DeclaringSyntaxReferences)
+            {
+                diagnostics.Add(Diagnostic.Create(
+                    SkipInaccessiblePropertyTemplate,
+                    syntaxReference.GetSyntax().GetLocation(),
+                    visibility));
+            }
         }
 
         private static readonly DiagnosticDescriptor SkipInaccessibleNestedRecordTemplate = new(
@@ -101,12 +113,12 @@ namespace ThorSoft.Optics.Generator.Diagnostics
             category: Category.CodeGeneration,
             defaultSeverity: DiagnosticSeverity.Warning,
             isEnabledByDefault: true);
-        public static Diagnostic SkipInaccessibleNestedRecord(RecordDeclarationSyntax record, Visibility visibility)
+        public static Diagnostic SkipInaccessibleNestedRecord(RecordDeclarationSyntax record, string accessibility)
         {
             return Diagnostic.Create(
                 SkipInaccessibleNestedRecordTemplate,
                 record.GetLocation(),
-                visibility.ToDeclarationString());
+                accessibility);
         }
 
         #endregion
