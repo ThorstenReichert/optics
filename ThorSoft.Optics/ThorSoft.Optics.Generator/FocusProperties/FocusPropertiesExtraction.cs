@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ThorSoft.Optics.Generator.Diagnostics;
-using ThorSoft.Optics.Generator.Syntax;
+using ThorSoft.Optics.Generator.Model;
 using ThorSoft.Optics.Generator.Util;
 
 namespace ThorSoft.Optics.Generator.FocusProperties
@@ -16,7 +16,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 return DiagnosticsFactory.MustBeRecordType(context.TargetNode).AsOutput();
             }
 
-            var typeAccessibility = recordTypeSymbol.DeclaredAccessibility;
+            var typeAccessibility = recordTypeSymbol.GetEffectiveAccessibility();
             if (IsInaccessible(typeAccessibility))
             {
                 return DiagnosticsFactory.SkipInaccessibleNestedRecord(recordDeclarationSyntax, typeAccessibility.ToKeywords()).AsOutput();
@@ -89,7 +89,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                     lenses.Add(new Lens
                     {
                         Name = propertySymbol.Name,
-                        Visibility = propertyAccessibility.ToEffectiveAccessibility(typeAccessibility).ToKeywords(),
+                        Visibility = GetPropertyExtensionAccessibility(propertyAccessibility, typeAccessibility).ToKeywords(),
                         Type = propertyTypeSymbol.ToString()
                     });
                 }
@@ -117,5 +117,21 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 is Accessibility.Private
                 or Accessibility.ProtectedAndInternal
                 or Accessibility.Protected;
+
+        /// <summary>
+        ///     Returns accessibility of the extension method to generate for a given property.
+        /// </summary>
+        private static Accessibility GetPropertyExtensionAccessibility(Accessibility propertyAccessibility, Accessibility typeAccesibility)
+        {
+            var effectiveAccessibility = propertyAccessibility.ToEffectiveAccessibility(typeAccesibility);
+
+            return effectiveAccessibility switch
+            {
+                // Protected internal extensions are not possible, downgrade to internal.
+                Accessibility.ProtectedOrInternal => Accessibility.Internal,
+
+                _ => effectiveAccessibility
+            };
+        }
     }
 }

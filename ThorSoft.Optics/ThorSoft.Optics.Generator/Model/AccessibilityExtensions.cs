@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace ThorSoft.Optics.Generator.Syntax
+namespace ThorSoft.Optics.Generator.Model
 {
     internal static class AccessibilityExtensions
     {
