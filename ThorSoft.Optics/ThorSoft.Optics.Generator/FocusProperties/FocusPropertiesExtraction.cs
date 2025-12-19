@@ -17,7 +17,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
             }
 
             var typeAccessibility = recordTypeSymbol.DeclaredAccessibility;
-            if (typeAccessibility is Accessibility.Private or Accessibility.ProtectedAndInternal or Accessibility.Protected)
+            if (IsInaccessible(typeAccessibility))
             {
                 return DiagnosticsFactory.SkipInaccessibleNestedRecord(recordDeclarationSyntax, typeAccessibility.ToKeywords()).AsOutput();
             }
@@ -78,7 +78,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 }
 
                 var propertyAccessibility = propertySymbol.DeclaredAccessibility;
-                if (propertyAccessibility is Accessibility.Private or Accessibility.ProtectedAndInternal or Accessibility.Protected)
+                if (IsInaccessible(propertyAccessibility))
                 {
                     diagnostics.AddSkipInaccessibleProperty(propertySymbol, propertyAccessibility.ToKeywords());
                     continue;
@@ -108,5 +108,14 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 Lenses = new(lenses.Extract())
             };
         }
+
+        /// <summary>
+        ///     Checks if the given accessibility is suitable for code generation of extensions.
+        /// </summary>
+        private static bool IsInaccessible(Accessibility accessibility) =>
+            accessibility
+                is Accessibility.Private
+                or Accessibility.ProtectedAndInternal
+                or Accessibility.Protected;
     }
 }
