@@ -11,4 +11,5 @@ OPTICS1003 | Code Generation | Disabled | DiagnosticsFactory
 OPTICS1004 | Code Generation | Disabled | DiagnosticsFactory
 OPTICS1005 | Code Generation | Disabled | DiagnosticsFactory
 OPTICS1006 | Code Generation | Disabled | DiagnosticsFactory
+OPTICS1007 | Code Generation | Warning | DiagnosticsFactory
 OPTICS9999 | Unexpected | Error | DiagnosticsFactory
