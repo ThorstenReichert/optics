@@ -1,0 +1,32 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+{
+    [ThorSoft.Optics.FocusProperties]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    private protected record NestedRecord
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    {
+^^^^^
+        public int Property { get; init; } 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }
+^^^^^
+}
+*/
+ : (2,4)-(6,5),
+      Message: No lens generated for nested record type with visibility 'private protected',
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: OPTICS1007,
+        Title: Skip inaccessible nested record,
+        MessageFormat: No lens generated for nested record type with visibility '{0}',
+        Category: Code Generation,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

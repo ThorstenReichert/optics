@@ -16,9 +16,14 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 return DiagnosticsFactory.MustBeRecordType(context.TargetNode).AsOutput();
             }
 
+            var typeVisibility = recordDeclarationSyntax.GetVisibility();
+            if (typeVisibility is Visibility.Private or Visibility.PrivateProtected or Visibility.Protected)
+            {
+                return DiagnosticsFactory.SkipInaccessibleNestedRecord(recordDeclarationSyntax, typeVisibility).AsOutput();
+            }
+
             var typeName = recordTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var typeKind = recordDeclarationSyntax.ClassOrStructKeyword.ValueText;
-            var typeVisibility = recordDeclarationSyntax.GetVisibility();
 
             ResizeArray<Diagnostic> diagnostics = new();
             ResizeArray<Lens> lenses = new();

@@ -94,6 +94,21 @@ namespace ThorSoft.Optics.Generator.Diagnostics
                 visibility.ToDeclarationString());
         }
 
+        private static readonly DiagnosticDescriptor SkipInaccessibleNestedRecordTemplate = new(
+            id: "OPTICS1007",
+            title: "Skip inaccessible nested record",
+            messageFormat: "No lens generated for nested record type with visibility '{0}'",
+            category: Category.CodeGeneration,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true);
+        public static Diagnostic SkipInaccessibleNestedRecord(RecordDeclarationSyntax record, Visibility visibility)
+        {
+            return Diagnostic.Create(
+                SkipInaccessibleNestedRecordTemplate,
+                record.GetLocation(),
+                visibility.ToDeclarationString());
+        }
+
         #endregion
 
         #region 9999 - 9999 Unexpected Diagnostics
