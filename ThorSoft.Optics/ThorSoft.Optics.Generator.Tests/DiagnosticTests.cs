@@ -82,6 +82,24 @@ namespace ThorSoft.Optics.Generator.Tests
             await Verify(driver);
         }
 
+        [Theory]
+        [InlineData("protected")]
+        [InlineData("private protected")]
+        [InlineData("private")]
+        public async Task SkipInaccessibleProperty(string visibility)
+        {
+            var driver = BuildDriver($$"""
+                [ThorSoft.Optics.FocusProperties]
+                record TestClass 
+                { 
+                    {{visibility}} int Property { get; init; } 
+                }
+                """,
+                ["OPTICS1006"]);
+
+            await Verify(driver);
+        }
+
         private static GeneratorDriver BuildDriver(string sourceText, IEnumerable<string> enabledDiagnostics, [CallerMemberName] string caller = null!)
         {
             var options = new CSharpCompilationOptions(

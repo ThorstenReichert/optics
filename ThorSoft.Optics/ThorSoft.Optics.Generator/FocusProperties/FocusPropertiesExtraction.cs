@@ -66,6 +66,13 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                     continue;
                 }
 
+                var propertyVisibility = property.GetVisibility();
+                if (propertyVisibility is Visibility.Private or Visibility.PrivateProtected or Visibility.Protected)
+                {
+                    diagnostics.Add(DiagnosticsFactory.SkipInaccessibleProperty(property, propertyVisibility));
+                    continue;
+                }
+
                 if (context.SemanticModel.GetDeclaredSymbol(property) is IPropertySymbol propertySymbol
                     && propertySymbol.Type is ITypeSymbol propertyTypeSymbol)
                 {
