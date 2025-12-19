@@ -1,9 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ThorSoft.Optics.Generator.Syntax;
 
 namespace ThorSoft.Optics.Generator.Diagnostics
 {
-    public static class DiagnosticsFactory
+    internal static class DiagnosticsFactory
     {
         #region 1000 - 1999 FocusProperties Diagnostics
 
@@ -76,6 +77,21 @@ namespace ThorSoft.Optics.Generator.Diagnostics
             return Diagnostic.Create(
                 SkipPropertyWithoutInitOrSetterTemplate,
                 property.GetLocation());
+        }
+
+        private static readonly DiagnosticDescriptor SkipInaccessiblePropertyTemplate = new(
+            id: "OPTICS1006",
+            title: "Skip inaccessible property",
+            messageFormat: "No lens generated for property with visibility '{0}'",
+            category: Category.CodeGeneration,
+            defaultSeverity: DiagnosticSeverity.Info,
+            isEnabledByDefault: false);
+        public static Diagnostic SkipInaccessibleProperty(PropertyDeclarationSyntax property, Visibility visibility)
+        {
+            return Diagnostic.Create(
+                SkipInaccessiblePropertyTemplate,
+                property.GetLocation(),
+                visibility.ToDeclarationString());
         }
 
         #endregion

@@ -1,0 +1,50 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+{ 
+    private protected int Property { get; init; } 
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+}
+*/
+ : (3,4)-(3,49),
+      Message: No lens generated for property with visibility 'private protected',
+      Severity: Info,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: OPTICS1006,
+        Title: Skip inaccessible property,
+        MessageFormat: No lens generated for property with visibility '{0}',
+        Category: Code Generation,
+        DefaultSeverity: Info,
+        IsEnabledByDefault: false
+      }
+    },
+    {
+      Location: /*
+[ThorSoft.Optics.FocusProperties]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+record TestClass 
+^^^^^^^^^^^^^^^^^
+{ 
+^^
+    private protected int Property { get; init; } 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+}
+^
+*/
+ : (0,0)-(4,1),
+      Message: Record is registered for lens generation, but no suitable properties were found,
+      Severity: Info,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: OPTICS1002,
+        Title: No lenses found to generate,
+        MessageFormat: Record is registered for lens generation, but no suitable properties were found,
+        Category: Code Generation,
+        DefaultSeverity: Info,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
