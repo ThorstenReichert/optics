@@ -44,7 +44,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 lenses.Add(new Lens
                 {
                     Name = parameter.Identifier.Text,
-                    Visibility = Accessibility.Public.ToEffectiveAccessibility(typeAccessibility).ToKeywords(),
+                    Accessibility = Accessibility.Public.ToEffectiveAccessibility(typeAccessibility).ToKeywords(),
                     Type = parameterTypeSymbol.ToString()
                 });
             }
@@ -89,7 +89,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                     lenses.Add(new Lens
                     {
                         Name = propertySymbol.Name,
-                        Visibility = GetPropertyExtensionAccessibility(propertyAccessibility, typeAccessibility).ToKeywords(),
+                        Accessibility = GetPropertyExtensionAccessibility(propertyAccessibility, typeAccessibility).ToKeywords(),
                         Type = propertyTypeSymbol.ToString()
                     });
                 }

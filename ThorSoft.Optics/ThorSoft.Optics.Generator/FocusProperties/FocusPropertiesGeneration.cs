@@ -106,7 +106,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                                 proxy.Compose({3});
                         }}
 
-                    """, request.TypeName, lens.Visibility, lens.Type, lens.Name);
+                    """, request.TypeName, lens.Accessibility, lens.Type, lens.Name);
 
                 // Lens.
                 builder.AppendFormat($$$"""
@@ -117,7 +117,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                                 proxy.Compose({3});
                         }}
 
-                    """, request.TypeName, lens.Visibility, lens.Type, lens.Name);
+                    """, request.TypeName, lens.Accessibility, lens.Type, lens.Name);
 
                 // Optional.
                 builder.AppendFormat($$$"""
@@ -128,7 +128,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                                 proxy.Compose({3});
                         }}
 
-                    """, request.TypeName, lens.Visibility, lens.Type, lens.Name);
+                    """, request.TypeName, lens.Accessibility, lens.Type, lens.Name);
 
                 // BoundIso.
                 builder.AppendFormat($$$"""
@@ -139,7 +139,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                                 proxy.Compose({3});
                         }}
 
-                    """, request.TypeName, lens.Visibility, lens.Type, lens.Name);
+                    """, request.TypeName, lens.Accessibility, lens.Type, lens.Name);
 
                 // BoundLens.
                 builder.AppendFormat($$$"""
@@ -150,7 +150,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                                 proxy.Compose({3});
                         }}
 
-                    """, request.TypeName, lens.Visibility, lens.Type, lens.Name);
+                    """, request.TypeName, lens.Accessibility, lens.Type, lens.Name);
 
                 // BoundOptional.
                 builder.AppendFormat($$$"""
@@ -161,7 +161,7 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                                 proxy.Compose({3});
                         }}
 
-                    """, request.TypeName, lens.Visibility, lens.Type, lens.Name);
+                    """, request.TypeName, lens.Accessibility, lens.Type, lens.Name);
 
                 builder.Append("""
 
