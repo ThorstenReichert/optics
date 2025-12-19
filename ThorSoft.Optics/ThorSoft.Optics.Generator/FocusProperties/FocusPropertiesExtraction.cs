@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ThorSoft.Optics.Generator.Diagnostics;
-using ThorSoft.Optics.Generator.Syntax;
+using ThorSoft.Optics.Generator.Model;
 using ThorSoft.Optics.Generator.Util;
 
 namespace ThorSoft.Optics.Generator.FocusProperties
@@ -16,10 +16,10 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 return DiagnosticsFactory.MustBeRecordType(context.TargetNode).AsOutput();
             }
 
-            var typeVisibility = recordDeclarationSyntax.GetVisibility();
-            if (typeVisibility is Visibility.Private or Visibility.PrivateProtected or Visibility.Protected)
+            var typeAccessibility = recordTypeSymbol.GetEffectiveAccessibility();
+            if (IsInaccessible(typeAccessibility))
             {
-                return DiagnosticsFactory.SkipInaccessibleNestedRecord(recordDeclarationSyntax, typeVisibility).AsOutput();
+                return DiagnosticsFactory.SkipInaccessibleNestedRecord(recordDeclarationSyntax, typeAccessibility.ToKeywords()).AsOutput();
             }
 
             var typeName = recordTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -44,47 +44,52 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 lenses.Add(new Lens
                 {
                     Name = parameter.Identifier.Text,
-                    Visibility = typeVisibility.Merge(Visibility.Public).ToDeclarationString(),
+                    Accessibility = Accessibility.Public.ToEffectiveAccessibility(typeAccessibility).ToKeywords(),
                     Type = parameterTypeSymbol.ToString()
                 });
             }
 
-            // Generate a lens for all properties defined on the class.
-            var propertyDeclarations = recordDeclarationSyntax.Members.OfType<PropertyDeclarationSyntax>();
-            foreach (var property in propertyDeclarations)
+            var propertySymbols = recordTypeSymbol.GetMembers().OfType<IPropertySymbol>();
+            foreach (var propertySymbol in propertySymbols)
             {
-                if (property.IsStaticProperty())
+                if (propertySymbol.IsImplicitlyDeclared)
                 {
-                    diagnostics.Add(DiagnosticsFactory.SkipStaticProperty(property));
+                    // Silently skip compiler-generated properties such as EqualityContract.
                     continue;
                 }
 
-                if (!property.HasGetter())
+                if (propertySymbol.IsStatic)
                 {
-                    diagnostics.Add(DiagnosticsFactory.SkipPropertyWithoutGetter(property));
+                    diagnostics.AddSkipStaticProperty(propertySymbol);
                     continue;
                 }
 
-                if (!property.HasSetter() && !property.HasInit())
+                if (propertySymbol.GetMethod is null)
                 {
-                    diagnostics.Add(DiagnosticsFactory.SkipPropertyWithoutInitOrSetter(property));
+                    diagnostics.AddSkipPropertyWithoutGetter(propertySymbol);
                     continue;
                 }
 
-                var propertyVisibility = property.GetVisibility();
-                if (propertyVisibility is Visibility.Private or Visibility.PrivateProtected or Visibility.Protected)
+                if (propertySymbol.SetMethod is null)
                 {
-                    diagnostics.Add(DiagnosticsFactory.SkipInaccessibleProperty(property, propertyVisibility));
+                    // Init-properties also have SetMethod (but with IsInitOnly = true).
+                    diagnostics.AddSkipPropertyWithoutInitOrSetter(propertySymbol);
                     continue;
                 }
 
-                if (context.SemanticModel.GetDeclaredSymbol(property) is IPropertySymbol propertySymbol
-                    && propertySymbol.Type is ITypeSymbol propertyTypeSymbol)
+                var propertyAccessibility = propertySymbol.DeclaredAccessibility;
+                if (IsInaccessible(propertyAccessibility))
+                {
+                    diagnostics.AddSkipInaccessibleProperty(propertySymbol, propertyAccessibility.ToKeywords());
+                    continue;
+                }
+
+                if (propertySymbol.Type is ITypeSymbol propertyTypeSymbol)
                 {
                     lenses.Add(new Lens
                     {
-                        Name = property.Identifier.Text,
-                        Visibility = property.GetVisibility().Merge(typeVisibility).ToDeclarationString(),
+                        Name = propertySymbol.Name,
+                        Accessibility = GetPropertyExtensionAccessibility(propertyAccessibility, typeAccessibility).ToKeywords(),
                         Type = propertyTypeSymbol.ToString()
                     });
                 }
@@ -101,6 +106,31 @@ namespace ThorSoft.Optics.Generator.FocusProperties
                 TypeName = typeName,
                 Diagnostics = new(diagnostics.Extract()),
                 Lenses = new(lenses.Extract())
+            };
+        }
+
+        /// <summary>
+        ///     Checks if the given accessibility is suitable for code generation of extensions.
+        /// </summary>
+        private static bool IsInaccessible(Accessibility accessibility) =>
+            accessibility
+                is Accessibility.Private
+                or Accessibility.ProtectedAndInternal
+                or Accessibility.Protected;
+
+        /// <summary>
+        ///     Returns accessibility of the extension method to generate for a given property.
+        /// </summary>
+        private static Accessibility GetPropertyExtensionAccessibility(Accessibility propertyAccessibility, Accessibility typeAccesibility)
+        {
+            var effectiveAccessibility = propertyAccessibility.ToEffectiveAccessibility(typeAccesibility);
+
+            return effectiveAccessibility switch
+            {
+                // Protected internal extensions are not possible, downgrade to internal.
+                Accessibility.ProtectedOrInternal => Accessibility.Internal,
+
+                _ => effectiveAccessibility
             };
         }
     }

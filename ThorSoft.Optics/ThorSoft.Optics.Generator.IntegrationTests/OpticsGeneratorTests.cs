@@ -78,7 +78,21 @@ namespace ThorSoft.Optics.Generator.IntegrationTests
         [FocusProperties]
         public record class TestRecord_InternalProperty : IEqualityOperators<TestRecord_InternalProperty, TestRecord_InternalProperty, bool>
         {
-            public int Property { get; init; }
+            internal int Property { get; init; }
+        }
+
+        [Fact]
+        public void Focus_ProtectedInternalProperty_SatisfiesLensSpec()
+        {
+            Lens<TestRecord_ProtectedInternalProperty, int> lens = Optics<TestRecord_ProtectedInternalProperty>.Focus(r => r.Property);
+
+            LensSpec.IsSatisfied(lens);
+        }
+
+        [FocusProperties]
+        public record class TestRecord_ProtectedInternalProperty : IEqualityOperators<TestRecord_ProtectedInternalProperty, TestRecord_ProtectedInternalProperty, bool>
+        {
+            protected internal int Property { get; init; }
         }
 
         [Fact]

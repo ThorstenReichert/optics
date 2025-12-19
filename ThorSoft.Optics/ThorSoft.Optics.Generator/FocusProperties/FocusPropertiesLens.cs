@@ -4,6 +4,6 @@
     {
         public required string Name { get; init; }
         public required string Type { get; init; }
-        public required string Visibility { get; init; }
+        public required string Accessibility { get; init; }
     }
 }
